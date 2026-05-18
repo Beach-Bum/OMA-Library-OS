@@ -190,7 +190,7 @@ def doc_template(title, content_html, current_slug):
 <h1>{title}</h1>
 {content_html}
 <div class="doc-footer">
-  <a href="/">\u03a6\u039c\u039b</a> &middot; <a href="https://github.com/Beach-Bum/oma">Source</a>
+  <a href="/">\u03a6\u039c\u039b</a> &middot; <a href="https://github.com/Beach-Bum/OMA-Library-OS">Source</a>
 </div>
 </main>
 </div>

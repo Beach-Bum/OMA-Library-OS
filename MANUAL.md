@@ -601,8 +601,8 @@ The library was designed to be rebuilt from the inside. The archivist's letter s
 ### Build
 
 ```bash
-git clone https://github.com/Beach-Bum/oma.git
-cd oma
+git clone https://github.com/Beach-Bum/OMA-Library-OS.git
+cd OMA-Library-OS
 make build
 ```
 
