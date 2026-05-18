@@ -171,6 +171,7 @@ def nav_html(current_slug):
         href = f"/docs/{slug}.html" if slug != "index" else "/docs/"
         cls = ' class="active"' if slug == current_slug else ""
         items.append(f'<li><a href="{href}"{cls}>{title}</a></li>')
+    items.append('<li><a href="/OMA-Library-OS_Manual.pdf">Manual (PDF)</a></li>')
     return "\n".join(items)
 
 
