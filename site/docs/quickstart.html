@@ -33,15 +33,14 @@
 <pre><code>
 git clone https://github.com/Beach-Bum/phi-mu-lambda.git
 cd phi-mu-lambda
-cargo build --release
-cp target/release/oma ~/.local/bin/
+make build
 </code></pre>
-<p>One binary. Under 1MB. Needs Rust to build, nothing to run.</p>
+<p>821KB binary. Needs Rust to build, nothing to run.</p>
 <h2>First boot</h2>
 <pre><code>
 oma
 </code></pre>
-<p>The library creates itself at <code>~/oma-library/</code>. Twelve founding documents appear on the shelves. A journal starts recording. You&#x27;re in.</p>
+<p>The library creates itself at <code>~/oma-library/</code>. Twelve founding documents appear on the shelves. A journal starts recording. A librarian daemon begins maintaining the collection. A dreamer begins composing in the background. You&#x27;re in.</p>
 <pre><code>
 ╔═══════════════════════════════╗
 ║    THE OPEN MANUAL ARCHIVE    ║
@@ -67,6 +66,11 @@ How would you like to begin?
 <pre><code>
 OMA_ROOT=/mnt/usb/my-library oma    # custom location
 </code></pre>
+<h2>Embedded programs</h2>
+<p>Run a ΦΜΛ program hidden in a document&#x27;s whitespace:</p>
+<pre><code>
+oma --embedded path/to/document
+</code></pre>
 <h2>Uninstall</h2>
 <pre><code>
 rm ~/.local/bin/oma      # remove binary
@@ -75,10 +79,14 @@ rm -rf ~/oma-library     # remove library
 <p>Nothing else to clean. No system files. No hidden state.</p>
 <h2>Cross-compile for Raspberry Pi</h2>
 <pre><code>
-rustup target add aarch64-unknown-linux-musl
-cargo build --release --target aarch64-unknown-linux-musl
+make cross-pi
 scp target/aarch64-unknown-linux-musl/release/oma pi@raspberrypi:~/
 </code></pre>
+<h2>Bootable image</h2>
+<pre><code>
+make image
+</code></pre>
+<p>Produces an initramfs you can boot on a Pi or test with QEMU. The library is the first thing that exists after the kernel.</p>
 <div class="doc-footer">
   <a href="/">ΦΜΛ</a> &middot; <a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a>
 </div>

@@ -18,10 +18,10 @@ own documents, and rebuild the library from the inside. No two libraries
 will ever be the same.</p>
 
 <pre><code>$ git clone https://github.com/Beach-Bum/phi-mu-lambda.git
-$ cd phi-mu-lambda && cargo build --release
+$ cd phi-mu-lambda && make build
 $ oma</code></pre>
 
-<p>One binary. Under 1MB. No dependencies beyond a terminal.</p>
+<p>821KB binary. One Rust crate beyond std. Boots in two seconds on a Pi.</p>
 
 <hr>
 
@@ -33,22 +33,24 @@ $ oma</code></pre>
 <li><strong>Λ (Lambda)</strong> — what it does. Logic that runs when you read it.</li>
 </ul>
 
+<p>A librarian daemon maintains the collection every five minutes.
+A dreamer inscribes new documents from random fragments every hour.
+The journal records everything. Three phantom catalogue entries point to
+documents that don't exist on any shelf.</p>
+
 <pre><code>> read welcome
 
     Welcome to the Open Manual Archive.
-    You are the first reader today...
+    You are the first reader in this library...
 
-> inspect welcome
+> catalogue
 
-    Φ (Form)
-      Location: welcome
-      Classification: document, still
+    15 documents across 18 rooms.
 
-    Μ (Message)
-      "Welcome to the Open Manual Archive..."
-
-    Λ (Lambda)
-      (none — this document is still)</code></pre>
+    The following entries have no corresponding document:
+      the-unwritten .............. (location unknown)
+      the-remembered ............. (location unknown)
+      the-awaited ................ (location unknown)</code></pre>
 
 <hr>
 

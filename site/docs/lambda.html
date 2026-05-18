@@ -38,10 +38,12 @@
 <tr><td>set</td><td><code>set name &quot;value&quot;</code></td><td>Set variable</td></tr>
 <tr><td>set ←</td><td><code>set name ← expr</code></td><td>Set from expression</td></tr>
 <tr><td>if</td><td><code>if cond:</code></td><td>Conditional (indented block)</td></tr>
+<tr><td>loop</td><td><code>loop:</code></td><td>Infinite loop (indented block, 10K cap)</td></tr>
+<tr><td>loop while</td><td><code>loop while cond:</code></td><td>Conditional loop (indented block)</td></tr>
 <tr><td>inscribe</td><td><code>inscribe path</code></td><td>Create file (indented = content)</td></tr>
 <tr><td>withdraw</td><td><code>withdraw path</code></td><td>Delete file</td></tr>
-<tr><td>erode self</td><td><code>erode self N</code></td><td>Remove N lines from own text</td></tr>
-<tr><td>mutate self</td><td><code>mutate self &quot;old&quot; &quot;new&quot;</code></td><td>Replace in own text</td></tr>
+<tr><td>erode self</td><td><code>erode self N</code></td><td>Remove N lines from own Μ text</td></tr>
+<tr><td>mutate self</td><td><code>mutate self &quot;old&quot; &quot;new&quot;</code></td><td>Replace text in own Μ layer</td></tr>
 <tr><td>wait</td><td><code>wait Ns</code></td><td>Pause N seconds</td></tr>
 </table>
 <h2>Expressions</h2>
@@ -49,7 +51,7 @@
 <tr><th>Expression</th><th>Returns</th></tr>
 <tr><td><code>count path/*</code></td><td>Number of items in directory</td></tr>
 <tr><td><code>read-count</code></td><td>Times this document was read</td></tr>
-<tr><td><code>random-line path</code></td><td>Random line from a file</td></tr>
+<tr><td><code>random-line path</code></td><td>Random line from a file (xorshift PRNG)</td></tr>
 <tr><td><code>random-choice path/</code></td><td>Random filename from directory</td></tr>
 <tr><td><code>ask &quot;prompt&quot;</code></td><td>Reader&#x27;s typed input</td></tr>
 </table>
@@ -71,6 +73,15 @@
 <tr><td><code>{read-count}</code></td><td>This document&#x27;s read count</td></tr>
 <tr><td><code>{document}</code></td><td>This document&#x27;s name</td></tr>
 </table>
+<h2>Self-modification</h2>
+<p>Documents can modify their own Μ (text) layer:</p>
+<ul>
+<li><code>erode self N</code> removes N lines from the end of the visible text. The Λ layer survives after the text is gone.</li>
+<li><code>mutate self &quot;old&quot; &quot;new&quot;</code> replaces the first occurrence in the text. The document rewrites itself.</li>
+</ul>
+<p>Both operations preserve the <code>--- Λ ---</code> separator. The logic layer is never eroded.</p>
+<h2>The grid language</h2>
+<p>Beneath simple Λ is the full ΦΜΛ grid language — a two-dimensional esoteric programming language. Grid programs use <code>inspect -deep</code> to view. Simple Λ instructions compile conceptually down to grid operations, but you never need to touch the grid unless you want to.</p>
 <h2>Example</h2>
 <pre><code>
 A greeting that remembers you.
@@ -84,6 +95,18 @@ if visits &gt; 1:
 set mood ← ask &quot;How are you?&quot;
 say &quot;Noted: {reader} is {mood}.&quot;
 write west-wing/journal/{date} &quot;{time} {reader}: {mood}&quot;
+</code></pre>
+<h2>Example with loop</h2>
+<pre><code>
+A countdown timer.
+
+--- Λ ---
+set n &quot;10&quot;
+loop while n &gt; 0:
+  say &quot;{n}...&quot;
+  set n ← n - 1
+  wait 1s
+say &quot;Done.&quot;
 </code></pre>
 <div class="doc-footer">
   <a href="/">ΦΜΛ</a> &middot; <a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a>

@@ -44,7 +44,9 @@
 <tr><td>glance</td><td><code>glance at &lt;doc&gt;</code></td><td><code>head -5</code></td></tr>
 <tr><td>peek</td><td><code>peek at &lt;doc&gt;</code></td><td><code>tail -5</code></td></tr>
 <tr><td>inspect</td><td><code>inspect &lt;doc&gt;</code></td><td><code>stat + cat</code></td></tr>
+<tr><td>inspect -deep</td><td><code>inspect &lt;doc&gt; -deep</code></td><td>full grid view</td></tr>
 <tr><td>browse</td><td><code>browse [room]</code></td><td><code>ls -la</code></td></tr>
+<tr><td>catalogue</td><td><code>catalogue</code></td><td>live index of everything</td></tr>
 </table>
 <h2>Writing</h2>
 <table>
@@ -69,19 +71,24 @@
 <tr><th>Command</th><th>Syntax</th><th>Unix</th></tr>
 <tr><td>search</td><td><code>search &lt;query&gt;</code></td><td><code>grep -ri</code></td></tr>
 <tr><td>scan</td><td><code>scan &lt;phrase&gt;</code></td><td><code>grep -r</code></td></tr>
-<tr><td>catalogue</td><td><code>catalogue</code></td><td><code>locate</code></td></tr>
 </table>
+<h2>Connecting</h2>
+<table>
+<tr><th>Command</th><th>Syntax</th><th>Unix</th></tr>
+<tr><td>annex</td><td><code>annex /path as name</code></td><td><code>mount</code> (symlink)</td></tr>
+<tr><td>seal</td><td><code>seal &lt;name&gt;</code></td><td><code>umount</code></td></tr>
+<tr><td>classify</td><td><code>classify &lt;level&gt; &lt;doc&gt;</code></td><td><code>chmod</code> (metadata)</td></tr>
+<tr><td>readers</td><td><code>readers</code></td><td><code>who</code></td></tr>
+</table>
+<p>Classification levels: <code>public</code>, <code>restricted</code>, <code>classified</code>. Only the Head Archivist may classify.</p>
 <h2>System</h2>
 <table>
 <tr><th>Command</th><th>Syntax</th><th>Unix</th></tr>
-<tr><td>readers</td><td><code>readers</code></td><td><code>who</code></td></tr>
 <tr><td>activity</td><td><code>activity</code></td><td><code>uptime</code></td></tr>
 <tr><td>inventory</td><td><code>inventory</code></td><td><code>df -h</code></td></tr>
 <tr><td>ledger</td><td><code>ledger</code></td><td><code>history</code></td></tr>
 <tr><td>turn-page</td><td><code>turn-page</code></td><td><code>clear</code></td></tr>
 <tr><td>as-archivist</td><td><code>as-archivist</code></td><td><code>sudo</code></td></tr>
-<tr><td>annex</td><td><code>annex &lt;dev&gt; as &lt;name&gt;</code></td><td><code>mount</code></td></tr>
-<tr><td>seal</td><td><code>seal &lt;name&gt;</code></td><td><code>umount</code></td></tr>
 <tr><td>leave</td><td><code>leave</code></td><td><code>exit</code></td></tr>
 <tr><td>help</td><td><code>help</code> / <code>?</code></td><td><code>man</code></td></tr>
 </table>
@@ -92,6 +99,18 @@
 <tr><td>into</td><td><code>say X into file</code></td><td><code>&gt;</code></td></tr>
 <tr><td>onto</td><td><code>say X onto file</code></td><td><code>&gt;&gt;</code></td></tr>
 </table>
+<h2>Background daemons</h2>
+<p>These run silently while you read:</p>
+<table>
+<tr><th>Daemon</th><th>Interval</th><th>What it does</th></tr>
+<tr><td>Librarian</td><td>5 minutes</td><td>Count documents, clean expired ephemera, log to journal</td></tr>
+<tr><td>Dreamer</td><td>1 hour</td><td>Read random fragments, inscribe dream documents in ephemera/</td></tr>
+</table>
+<h2>CLI flags</h2>
+<table>
+<tr><th>Flag</th><th>Effect</th></tr>
+<tr><td><code>--embedded &lt;file&gt;</code></td><td>Extract and run a ΦΜΛ program from document whitespace</td></tr>
+</table>
 <h2>Glossary</h2>
 <table>
 <tr><th>In the library</th><th>In Unix</th><th>In philosophy</th></tr>
@@ -100,6 +119,9 @@
 <tr><td>The Fundament</td><td>Kernel</td><td>Substrate</td></tr>
 <tr><td>The Journal</td><td>syslog</td><td>Finding aid</td></tr>
 <tr><td>The Archivist</td><td>root</td><td>Authority</td></tr>
+<tr><td>The Librarian</td><td>cron daemon</td><td>Custodian</td></tr>
+<tr><td>The Dreamer</td><td>generative process</td><td>Imagination</td></tr>
+<tr><td>Phantom entry</td><td>dangling symlink</td><td>Absent referent</td></tr>
 <tr><td>Λ layer</td><td>Script</td><td>Agency</td></tr>
 <tr><td>Μ layer</td><td>Content</td><td>Message</td></tr>
 <tr><td>Φ layer</td><td>Metadata</td><td>Form</td></tr>
