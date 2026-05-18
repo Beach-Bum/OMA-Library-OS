@@ -4,9 +4,9 @@
 //! Single binary. Replaces /bin/sh. Becomes PID 1.
 //!
 //! Every file is a document with three registers:
-//!   Φ (Form)    — where it is, what it's classified as
-//!   Μ (Message) — what it says (visible text)
-//!   Λ (Lambda)  — what it does (executable logic)
+//!   Φ — Phi — Form    — where it is, what it's classified as
+//!   Μ — Mu — Message — what it says (visible text)
+//!   Λ — Lambda — Function  — what it does (executable logic)
 
 mod daemon;
 mod embedded;

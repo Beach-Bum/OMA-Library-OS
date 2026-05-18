@@ -9,5 +9,6 @@ __pycache__/
 /target
 /target/
 Cargo.lock
-_content-backup/
+# _content-backup/ is the MDX source build.py compiles into site/.
+# It is intentionally tracked so the site is reproducible from the repo.
 .gstack/

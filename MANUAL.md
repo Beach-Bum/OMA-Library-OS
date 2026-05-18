@@ -169,11 +169,11 @@ You cannot tell by looking whether a document is alive or still. The text gives 
 
 Every document in this library has three layers. You've been seeing one of them — the text. But there are two more, and they are always there, whether you look or not.
 
-**Φ (Form)** — where the document is. Its room, its shelf, its place in the classification. Form is structure. A document without form is lost — it exists but cannot be found.
+**Φ — Phi — Form** — where the document is. Its room, its shelf, its place in the classification. Form is structure. A document without form is lost — it exists but cannot be found.
 
-**Μ (Message)** — what the document says. The words. The text you've been reading. Message is content. A document without message is blank — it has a place but nothing to say.
+**Μ — Mu — Message** — what the document says. The words. The text you've been reading. Message is content. A document without message is blank — it has a place but nothing to say.
 
-**Λ (Lambda)** — what the document does. Logic that runs when you read it. Lambda is action. A document without lambda is still — it says something but does nothing.
+**Λ — Lambda — Function** — what the document does. Logic that runs when you read it. Lambda is action. A document without lambda is still — it says something but does nothing.
 
 To see all three:
 
@@ -182,15 +182,15 @@ To see all three:
 ```
 
 ```
-Φ (Form)
+Φ — Phi — Form
   Location: welcome
   Classification: document, still
   Size: 839 bytes
 
-Μ (Message)
+Μ — Mu — Message
   Content: "Welcome to the Open Manual Archive..."
 
-Λ (Lambda)
+Λ — Lambda — Function
   Logic: (none — this document is still)
 ```
 
@@ -201,15 +201,15 @@ Now try a living document:
 ```
 
 ```
-Φ (Form)
+Φ — Phi — Form
   Location: east-wing/stacks/the-erosion
   Classification: process, living document
   Size: 847 bytes
 
-Μ (Message)
+Μ — Mu — Message
   Content: "This story loses a line each time it is read..."
 
-Λ (Lambda)
+Λ — Lambda — Function
   set visits ← read-count
   if visits > 1:
     erode self 1

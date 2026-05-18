@@ -34,8 +34,8 @@ pub fn header(text: &str) {
     println!();
 }
 
-pub fn register_header(register: &str, label: &str) {
-    println!("    {register} ({label})");
+pub fn register_header(glyph: &str, name: &str, meaning: &str) {
+    println!("    {glyph} — {name} — {meaning}");
 }
 
 pub fn register_field(key: &str, value: &str) {
