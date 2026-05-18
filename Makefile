@@ -36,24 +36,18 @@ image: cross-pi
 	@mkdir -p build/initramfs/{bin,dev,proc,sys,tmp,root}
 	@cp $(PI_BINARY) build/initramfs/bin/oma
 	@# Init script: mount filesystems, set up environment, exec oma
-	@cat > build/initramfs/init << 'INITEOF'
-#!/bin/oma
-# This init script is never actually read by oma as a document.
-# The kernel execs /init which is a symlink to /bin/oma.
-# But if you could read it, it would say:
-# The library is the first thing that exists after the kernel.
-INITEOF
-	@# Actually make init a shell script that launches oma
-	@cat > build/initramfs/init << 'INITEOF'
-#!/bin/sh
-mount -t proc proc /proc
-mount -t sysfs sysfs /sys
-mount -t devtmpfs devtmpfs /dev
-export HOME=/root
-export OMA_ROOT=/root/oma-library
-export TERM=linux
-exec /bin/oma
-INITEOF
+	@# (The library is the first thing that exists after the kernel.)
+	@# The kernel execs /init which is a symlink to /bin/oma.
+	@printf '%s\n' \
+		'#!/bin/sh' \
+		'mount -t proc proc /proc' \
+		'mount -t sysfs sysfs /sys' \
+		'mount -t devtmpfs devtmpfs /dev' \
+		'export HOME=/root' \
+		'export OMA_ROOT=/root/oma-library' \
+		'export TERM=linux' \
+		'exec /bin/oma' \
+		> build/initramfs/init
 	@chmod +x build/initramfs/init
 	@# Create initramfs cpio
 	@cd build/initramfs && find . | cpio -o -H newc 2>/dev/null | gzip > ../initramfs.cpio.gz
