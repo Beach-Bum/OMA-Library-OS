@@ -2,3 +2,10 @@ __pycache__/
 *.pyc
 *.faid
 /tmp/
+
+
+# Added by cargo
+
+/target
+/target/
+Cargo.lock
