@@ -452,7 +452,7 @@ impl ShellState {
             .unwrap_or_else(|_| if doc.is_process { "process, living document".into() } else { "document, still".into() });
 
         narrator::blank();
-        narrator::register_header("Φ", "Form");
+        narrator::register_header("Φ", "Phi", "Form");
         narrator::register_field("Location", &rel.to_string_lossy());
         narrator::register_field("Classification", &classification);
 
@@ -469,12 +469,12 @@ impl ShellState {
             }
 
         narrator::blank();
-        narrator::register_header("Μ", "Message");
+        narrator::register_header("Μ", "Mu", "Message");
         let preview: String = doc.mu.lines().take(3).collect::<Vec<_>>().join("\n");
         narrator::register_field("Content", &format!("\"{}\"", preview));
 
         narrator::blank();
-        narrator::register_header("Λ", "Lambda");
+        narrator::register_header("Λ", "Lambda", "Function");
         if doc.lambda.is_empty() {
             narrator::register_field("Logic", "(none — this document is still)");
         } else if deep {
@@ -508,13 +508,13 @@ impl ShellState {
         let rooms = entries.iter().filter(|e| e.is_dir).count();
 
         narrator::blank();
-        narrator::register_header("Φ", "Form");
+        narrator::register_header("Φ", "Phi", "Form");
         narrator::register_field("Room", &name);
         narrator::register_field("Documents", &docs.to_string());
         narrator::register_field("Sub-rooms", &rooms.to_string());
 
         narrator::blank();
-        narrator::register_header("Μ", "Message");
+        narrator::register_header("Μ", "Mu", "Message");
         let desc = library::room_description(path);
         narrator::register_field(
             "Description",
@@ -522,7 +522,7 @@ impl ShellState {
         );
 
         narrator::blank();
-        narrator::register_header("Λ", "Lambda");
+        narrator::register_header("Λ", "Lambda", "Function");
         narrator::register_field("Logic", "(rooms do not execute)");
     }
 

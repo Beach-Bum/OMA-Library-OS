@@ -10,7 +10,7 @@
 
 ## 1. Abstract
 
-ΦΜΛ (Phi Mu Lambda) is an esoteric programming language organized around three named registers — Φ (Form), Μ (Message), and Λ (Lambda) — corresponding to the three phases of an archival workflow: structural declaration, content population, and functional activation. Execution proceeds on a two-dimensional toroidal grid whose instructions mutate after each traversal. No operation may execute without the consensus of all three registers; dissent is logged to a persistent finding aid and may trigger a mediation protocol. Programs may be embedded invisibly in the whitespace of any host document and are therefore simultaneously a text and a shadow text. ΦΜΛ is Turing-complete. ΦΜΛ is hostile. ΦΜΛ does not want to be run.
+ΦΜΛ (Phi Mu Lambda) is an esoteric programming language organized around three named registers — Φ — Phi — Form, Μ — Mu — Message, and Λ — Lambda — Function — corresponding to the three phases of an archival workflow: structural declaration, content population, and functional activation. Execution proceeds on a two-dimensional toroidal grid whose instructions mutate after each traversal. No operation may execute without the consensus of all three registers; dissent is logged to a persistent finding aid and may trigger a mediation protocol. Programs may be embedded invisibly in the whitespace of any host document and are therefore simultaneously a text and a shadow text. ΦΜΛ is Turing-complete. ΦΜΛ is hostile. ΦΜΛ does not want to be run.
 
 ---
 
@@ -18,11 +18,11 @@
 
 The three registers encode three things that are always already present in any act of information management:
 
-**Φ (Form)** is Ranganathan's insight that classification is not labeling but analysis — the decomposition of a subject into its fundamental facets before any description can begin. Form precedes content. The grid must exist before the message can be placed. Every addressing scheme is an ontological commitment.
+**Φ — Phi — Form** is Ranganathan's insight that classification is not labeling but analysis — the decomposition of a subject into its fundamental facets before any description can begin. Form precedes content. The grid must exist before the message can be placed. Every addressing scheme is an ontological commitment.
 
-**Μ (Message)** is Shannon's formalization and Derrida's deconstruction simultaneously: the message is quantifiable entropy and it is also a political act of archival power. What gets written into the Μ register is what exists. What does not get written does not exist. The I/O layer is steganographic because every channel is already a steganographic act — the medium is not neutral, and the message is never only what it says.
+**Μ — Mu — Message** is Shannon's formalization and Derrida's deconstruction simultaneously: the message is quantifiable entropy and it is also a political act of archival power. What gets written into the Μ register is what exists. What does not get written does not exist. The I/O layer is steganographic because every channel is already a steganographic act — the medium is not neutral, and the message is never only what it says.
 
-**Λ (Lambda)** is Church's lambda calculus in its least comfortable form: pure function, anonymous, consuming its inputs, returning transformed outputs, leaving no state. In ΦΜΛ, Λ does not accumulate — each activation of the Λ register consumes a portion of the Φ structure that supports it. Computation is not free. Every operation degrades the substrate.
+**Λ — Lambda — Function** is Church's lambda calculus in its least comfortable form: pure function, anonymous, consuming its inputs, returning transformed outputs, leaving no state. In ΦΜΛ, Λ does not accumulate — each activation of the Λ register consumes a portion of the Φ structure that supports it. Computation is not free. Every operation degrades the substrate.
 
 The consensus protocol is drawn from INTERCAL's insight that politeness is a computational primitive, and from archival theory's principle of multi-party review: no record is appraised by a single archivist. The schism mechanism formalizes what every collaborative institution already knows — disagreement is not an error state but an information state. Logged dissent is evidence.
 

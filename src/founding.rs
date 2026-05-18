@@ -395,9 +395,9 @@ write west-wing/journal/{date} "{time} The dreamer produced dream #{visits}."
 
 In this library, a document is three things:
 
-  Φ (Form)    — where it lives. Its room, its shelf, its position.
-  Μ (Message) — what it says. The words you are reading now.
-  Λ (Lambda)  — what it does. Logic that runs when you read it.
+  Φ — Phi — Form        — where it lives. Its room, its shelf, its position.
+  Μ — Mu — Message      — what it says. The words you are reading now.
+  Λ — Lambda — Function — what it does. Logic that runs when you read it.
 
 Most documents you encounter in life have only Μ — text, nothing more.
 A document with Λ is alive. It acts when read. The words you see may

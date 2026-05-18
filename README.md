@@ -6,9 +6,9 @@ Boot it. You're standing in an entrance hall. The shelves are full. A document r
 
 ΦΜΛ is three Greek letters — **Phi, Mu, Lambda** — and three things at once:
 
-- **Φ (Form)** — where something is. Its place on the shelves. Its structure.
-- **Μ (Message)** — what something says. The text you read.
-- **Λ (Lambda)** — what something does. The logic that runs when you read it.
+- **Φ — Phi — Form** — where something is. Its place on the shelves. Its structure.
+- **Μ — Mu — Message** — what something says. The text you read.
+- **Λ — Lambda — Function** — what something does. The logic that runs when you read it.
 
 Every document in the library carries all three. `read` shows you the message. `inspect` shows you all three registers. Some documents are still. Some are alive.
 
@@ -20,14 +20,14 @@ Every document in the library carries all three. `read` shows you the message. `
 
 > inspect welcome
 
-    Φ (Form)
+    Φ — Phi — Form
       Location: welcome
       Classification: document, still
 
-    Μ (Message)
+    Μ — Mu — Message
       Content: "Welcome to the Open Manual Archive..."
 
-    Λ (Lambda)
+    Λ — Lambda — Function
       Logic: (none — this document is still)
 ```
 
@@ -75,7 +75,7 @@ You see a filing system that is also a philosophy of classification. The catalog
     I did not create these entries...
 
 > inspect dormant
-    Λ (Lambda)
+    Λ — Lambda — Function
       (instructions waiting for a condition that hasn't been met)
 ```
 

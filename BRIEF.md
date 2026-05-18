@@ -18,11 +18,11 @@ In Dutch, *oma* means grandmother — the keeper of stories, the one whose house
 
 Everything in ΦΜΛ has three layers. A document, a room, a process, the system itself — all three are always there.
 
-**Φ (Form)** — Where something is. Its classification, its location on the shelves, its structural relationship to other documents. The skeleton.
+**Φ — Phi — Form** — Where something is. Its classification, its location on the shelves, its structural relationship to other documents. The skeleton.
 
-**Μ (Message)** — What something says. The visible text. The human-readable content. What you see when you `read` a document.
+**Μ — Mu — Message** — What something says. The visible text. The human-readable content. What you see when you `read` a document.
 
-**Λ (Lambda)** — What something does. The executable logic. The margin. What happens when the document is alive.
+**Λ — Lambda — Function** — What something does. The executable logic. The margin. What happens when the document is alive.
 
 Every interaction with ΦΜΛ shows you one or more of these layers depending on what you ask:
 
@@ -35,18 +35,18 @@ Every interaction with ΦΜΛ shows you one or more of these layers depending on
 
 > inspect clock
 
-    Φ (Form)
+    Φ — Phi — Form
       Location:     east-wing/processes/clock
       Classification: process, self-updating, public
       Acquired:     system-birth
       Condition:    good
 
-    Μ (Message)
+    Μ — Mu — Message
       "It is Sunday, 18 May 2026, {time}.
        The library has been open for {uptime}.
        {reader-count} readers are present. {overdue-status}."
 
-    Λ (Lambda)
+    Λ — Lambda — Function
       loop:
         time ← query fundament clock
         uptime ← query fundament boot-time
@@ -201,18 +201,18 @@ Inscribe a document with visible text only. It becomes part of the collection. I
 
 ### Medium: write a document that does something
 
-Add a Λ (Lambda) layer. The document now has both text you can read AND logic that runs.
+Add a Λ layer — the document's Function register. The document now has both text you can read AND logic that runs.
 
 ```
 > inscribe east-wing/utilities/greeter
 
     (editor opens — two sections)
 
-    --- Μ (Message) ---
+    --- Μ — Mu — Message ---
     This document greets whoever reads it by name
     and tells them how long they've been in the library.
 
-    --- Λ (Lambda) ---
+    --- Λ — Lambda — Function ---
     reader ← query reading-room/current
     duration ← query reader.entered
     say "Hello, {reader.name}."
@@ -251,16 +251,16 @@ For complex logic — daemons, network services, the librarian itself — the Λ
 ```
 > inspect librarian
 
-    Φ (Form)
+    Φ — Phi — Form
       Location:     east-wing/processes/librarian
       Classification: daemon, system-critical, restricted
       Condition:    mutating (cycle 4,712)
 
-    Μ (Message)
+    Μ — Mu — Message
       "The librarian catalogues new acquisitions, repairs
        damaged documents, and maintains the index."
 
-    Λ (Lambda)
+    Λ — Lambda — Function
       [ΦΜΛ grid program — 24x16, degree 3, 4712 mutations]
       Use `inspect librarian -deep` to view the grid.
 ```
