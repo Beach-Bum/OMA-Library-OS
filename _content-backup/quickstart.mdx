@@ -1,0 +1,83 @@
+---
+title: Getting Started
+description: Install ΦΜΛ and open your first library.
+---
+
+## Install
+
+```bash
+git clone https://github.com/Beach-Bum/OMA-Library-OS.git
+cd OMA-Library-OS
+make build
+```
+
+821KB binary. Needs Rust to build, nothing to run.
+
+## First boot
+
+```bash
+oma
+```
+
+The library creates itself at `~/oma-library/`. Twelve founding documents appear on the shelves. A journal starts recording. A librarian daemon begins maintaining the collection. A dreamer begins composing in the background. You're in.
+
+```
+╔═══════════════════════════════╗
+║    THE OPEN MANUAL ARCHIVE    ║
+╚═══════════════════════════════╝
+
+You are standing in the Entrance Hall.
+The lights are on. The shelves are full.
+A document rests on the desk: "welcome"
+
+How would you like to begin?
+
+  1  Read the welcome letter
+  2  Explore the library
+  3  Start writing
+```
+
+Pick a number or type any command. The tour is a door, not a wall.
+
+## Configuration
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `OMA_ROOT` | `~/oma-library` | Library location |
+| `USER` | system username | Reader name in journal |
+
+```bash
+OMA_ROOT=/mnt/usb/my-library oma    # custom location
+```
+
+## Embedded programs
+
+Run a ΦΜΛ program hidden in a document's whitespace:
+
+```bash
+oma --embedded path/to/document
+```
+
+## Uninstall
+
+```bash
+rm ~/.local/bin/oma      # remove binary
+rm -rf ~/oma-library     # remove library
+```
+
+Nothing else to clean. No system files. No hidden state.
+
+## Cross-compile for Raspberry Pi
+
+```bash
+make cross-pi
+scp target/aarch64-unknown-linux-musl/release/oma pi@raspberrypi:~/
+```
+
+## Bootable image
+
+```bash
+make image
+```
+
+Produces an initramfs you can boot on a Pi or test with QEMU. The library is the first thing that exists after the kernel.

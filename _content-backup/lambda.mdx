@@ -1,0 +1,96 @@
+---
+title: The Λ Language
+description: Everything the margin language can do.
+---
+
+Λ is the scripting language in document margins. It runs when a document is `read`.
+
+## Instructions
+
+| Instruction | Syntax | Effect |
+|-------------|--------|--------|
+| say | `say "text"` | Print. `{var}` substitution. |
+| write | `write path "text"` | Append line to file |
+| set | `set name "value"` | Set variable |
+| set ← | `set name ← expr` | Set from expression |
+| if | `if cond:` | Conditional (indented block) |
+| loop | `loop:` | Infinite loop (indented block, 10K cap) |
+| loop while | `loop while cond:` | Conditional loop (indented block) |
+| inscribe | `inscribe path` | Create file (indented = content) |
+| withdraw | `withdraw path` | Delete file |
+| erode self | `erode self N` | Remove N lines from own Μ text |
+| mutate self | `mutate self "old" "new"` | Replace text in own Μ layer |
+| wait | `wait Ns` | Pause N seconds |
+
+## Expressions
+
+| Expression | Returns |
+|------------|---------|
+| `count path/*` | Number of items in directory |
+| `read-count` | Times this document was read |
+| `random-line path` | Random line from a file (xorshift PRNG) |
+| `random-choice path/` | Random filename from directory |
+| `ask "prompt"` | Reader's typed input |
+
+## Conditions
+
+| Form | True when |
+|------|-----------|
+| `var > N` | Greater than |
+| `var < N` | Less than |
+| `var == "text"` | Equals |
+| `var` | Non-empty, not "0" |
+
+## Built-in variables
+
+| Variable | Contains |
+|----------|----------|
+| `{reader}` | Username |
+| `{time}` | HH:MM:SS |
+| `{date}` | YYYY-MM-DD |
+| `{documents-read}` | Session count |
+| `{read-count}` | This document's read count |
+| `{document}` | This document's name |
+
+## Self-modification
+
+Documents can modify their own Μ (text) layer:
+
+- `erode self N` removes N lines from the end of the visible text. The Λ layer survives after the text is gone.
+- `mutate self "old" "new"` replaces the first occurrence in the text. The document rewrites itself.
+
+Both operations preserve the `--- Λ ---` separator. The logic layer is never eroded.
+
+## The grid language
+
+Beneath simple Λ is the full ΦΜΛ grid language — a two-dimensional esoteric programming language. Grid programs use `inspect -deep` to view. Simple Λ instructions compile conceptually down to grid operations, but you never need to touch the grid unless you want to.
+
+## Example
+
+```
+A greeting that remembers you.
+
+--- Λ ---
+set visits ← read-count
+if visits == "1":
+  say "Welcome, {reader}. First visit."
+if visits > 1:
+  say "Welcome back. Visit #{visits}."
+set mood ← ask "How are you?"
+say "Noted: {reader} is {mood}."
+write west-wing/journal/{date} "{time} {reader}: {mood}"
+```
+
+## Example with loop
+
+```
+A countdown timer.
+
+--- Λ ---
+set n "10"
+loop while n > 0:
+  say "{n}..."
+  set n ← n - 1
+  wait 1s
+say "Done."
+```
