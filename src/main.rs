@@ -8,17 +8,35 @@
 //!   Μ (Message) — what it says (visible text)
 //!   Λ (Lambda)  — what it does (executable logic)
 
+mod daemon;
+mod embedded;
 mod founding;
+mod grid;
 mod lambda;
 mod library;
 mod narrator;
+mod session;
 mod shell;
 
 use std::env;
 use std::io::{self, BufRead, Write};
 use std::path::PathBuf;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    // Handle --embedded mode
+    if args.len() >= 3 && args[1] == "--embedded" {
+        let path = PathBuf::from(&args[2]);
+        match embedded::run_embedded(&path) {
+            Ok(_) => {}
+            Err(e) => eprintln!("Error: {e}"),
+        }
+        return;
+    }
+
     let library_root = env::var("OMA_ROOT")
         .map(PathBuf::from)
         .unwrap_or_else(|_| {
@@ -33,7 +51,15 @@ fn main() {
         founding::create_library(&library_root);
     }
 
-    let mut state = shell::ShellState::new(library_root);
+    // Register this session
+    let session_id = session::register(&library_root);
+
+    // Start background daemons
+    let running = Arc::new(AtomicBool::new(true));
+    let librarian = daemon::start_librarian(library_root.clone(), Arc::clone(&running));
+    let dreamer = daemon::start_dreamer(library_root.clone(), Arc::clone(&running));
+
+    let mut state = shell::ShellState::new(library_root.clone());
     state.boot();
 
     let stdin = io::stdin();
@@ -59,4 +85,12 @@ fn main() {
     }
 
     state.shutdown();
+
+    // Stop daemons
+    running.store(false, Ordering::Relaxed);
+    let _ = librarian.join();
+    let _ = dreamer.join();
+
+    // Unregister session
+    session::unregister(&library_root, &session_id);
 }

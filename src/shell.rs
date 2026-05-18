@@ -417,15 +417,23 @@ impl ShellState {
             return;
         }
 
-        let path = self.resolve_document(args);
+        // Handle -deep flag
+        let (deep, name) = if args.starts_with("-deep ") {
+            (true, args.strip_prefix("-deep ").unwrap())
+        } else if args.ends_with(" -deep") {
+            (true, args.strip_suffix(" -deep").unwrap())
+        } else {
+            (false, args)
+        };
+
+        let path = self.resolve_document(name);
         let Some(path) = path else {
             // Maybe it's a room
-            let room_path = self.cwd.join(args);
-            if room_path.is_dir() {
-                self.inspect_room(&room_path);
+            if let Some(room) = self.resolve_room(name) {
+                self.inspect_room(&room);
                 return;
             }
-            narrator::error(&format!("There is no document or room called \"{args}\" here."));
+            narrator::error(&format!("There is no document or room called \"{name}\" here."));
             return;
         };
 
@@ -436,21 +444,29 @@ impl ShellState {
 
         let rel = path.strip_prefix(&self.root).unwrap_or(&path);
 
+        // Check classification
+        let class_path = self.root.join(".meta").join(
+            rel.to_string_lossy().replace('/', "_") + ".classification"
+        );
+        let classification = fs::read_to_string(&class_path)
+            .unwrap_or_else(|_| if doc.is_process { "process, living document".into() } else { "document, still".into() });
+
         narrator::blank();
         narrator::register_header("Φ", "Form");
-        narrator::register_field(
-            "Location",
-            &rel.to_string_lossy(),
-        );
-        narrator::register_field(
-            "Classification",
-            if doc.is_process { "process, living document" } else { "document, still" },
-        );
+        narrator::register_field("Location", &rel.to_string_lossy());
+        narrator::register_field("Classification", &classification);
 
         let metadata = fs::metadata(&path);
         if let Ok(meta) = metadata {
             let size = meta.len();
             narrator::register_field("Size", &format!("{size} bytes"));
+        }
+
+        // Check for embedded whitespace program
+        if let Ok(content) = fs::read_to_string(&path) {
+            if crate::embedded::has_embedded(&content) {
+                narrator::register_field("Embedded", "contains a ΦΜΛ whitespace program");
+            }
         }
 
         narrator::blank();
@@ -462,6 +478,18 @@ impl ShellState {
         narrator::register_header("Λ", "Lambda");
         if doc.lambda.is_empty() {
             narrator::register_field("Logic", "(none — this document is still)");
+        } else if deep {
+            // Deep inspection: if it looks like grid code, show the grid
+            if doc.lambda.contains('Φ') || doc.lambda.contains('Μ') || doc.lambda.contains('Λ')
+                || doc.lambda.contains('>') || doc.lambda.contains('@')
+            {
+                let grid = crate::grid::GridState::from_source(&doc.lambda);
+                println!("{}", grid.display_grid());
+            } else {
+                for line in doc.lambda.lines() {
+                    println!("      {line}");
+                }
+            }
         } else {
             for line in doc.lambda.lines().take(10) {
                 println!("      {line}");
@@ -469,6 +497,7 @@ impl ShellState {
             let total = doc.lambda.lines().count();
             if total > 10 {
                 println!("      ... ({total} lines total)");
+                println!("      Use: inspect {name} -deep  to see the full grid.");
             }
         }
     }
@@ -822,8 +851,17 @@ impl ShellState {
     }
 
     fn cmd_readers(&self) {
-        narrator::say(&format!("1 reader present: {} (you)", self.reader_name));
-        narrator::say(&format!("Documents read this session: {}", self.documents_read));
+        let sessions = crate::session::list_active(&self.root);
+        let count = sessions.len();
+        narrator::say(&format!("{count} reader{} present:", if count == 1 { "" } else { "s" }));
+        narrator::blank();
+        for (user, time, pid) in &sessions {
+            let is_me = *pid == std::process::id();
+            let suffix = if is_me { " (you)" } else { "" };
+            narrator::say(&format!("  {user}{suffix} — arrived {time}"));
+        }
+        narrator::blank();
+        narrator::say(&format!("You have read {} documents this session.", self.documents_read));
     }
 
     fn cmd_activity(&self) {
