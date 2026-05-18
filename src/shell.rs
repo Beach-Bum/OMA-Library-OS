@@ -114,13 +114,14 @@ impl ShellState {
             "ledger" => self.cmd_ledger(),
             "turn-page" => self.cmd_turn_page(),
             "leave" | "exit" | "quit" => return false,
-            "help" => self.cmd_help(),
+            "help" | "what" | "how" | "?" => self.cmd_help(),
             "where" | "whereami" => self.cmd_where(),
             _ => {
-                narrator::error(&format!(
-                    "The library does not understand \"{cmd}\"."
+                // Try to be helpful
+                narrator::say(&format!(
+                    "The library does not understand \"{input}\"."
                 ));
-                narrator::error("Try \"help\" to see what a reader can do.");
+                narrator::say("Type \"help\" to see what you can do, or \"browse\" to look around.");
             }
         }
 
@@ -740,30 +741,39 @@ impl ShellState {
     }
 
     fn cmd_help(&self) {
-        narrator::say("What a reader can do:");
+        narrator::say("What you can do here:");
         narrator::blank();
-        narrator::say("walk east-wing        walk to a room");
-        narrator::say("walk back             return to the previous room");
-        narrator::say("walk lobby            return to the entrance hall");
-        narrator::say("browse                see what's on the shelves");
-        narrator::say("read welcome          read a document");
-        narrator::say("glance at report      read the first few lines");
-        narrator::say("peek at logbook       read the last few lines");
-        narrator::say("inspect clock         see all three registers (Φ Μ Λ)");
-        narrator::say("inscribe my-note      create a new document");
-        narrator::say("revise welcome        edit an existing document");
-        narrator::say("search borges         search the catalogue");
-        narrator::say("say hello             say something");
-        narrator::say("say hello into note   write to a document");
-        narrator::say("readers               who is here?");
-        narrator::say("activity              what's happening?");
-        narrator::say("inventory             how much shelf space?");
-        narrator::say("ledger                your actions today");
-        narrator::say("turn-page             clear the screen");
-        narrator::say("where                 where are you?");
-        narrator::say("leave                 leave the library");
+        narrator::say("  Explore");
+        narrator::say("    browse              look at the shelves around you");
+        narrator::say("    browse east wing    look at a specific wing");
+        narrator::say("    walk east wing      walk to a room");
+        narrator::say("    walk back           go back to the previous room");
+        narrator::say("    walk lobby          return to the entrance hall");
+        narrator::say("    where               where am I?");
         narrator::blank();
-        narrator::say("as-archivist          act as Head Archivist (restricted areas)");
+        narrator::say("  Read");
+        narrator::say("    read welcome        read a document");
+        narrator::say("    read the letter     you don't need exact names");
+        narrator::say("    read garden         partial names work too");
+        narrator::say("    glance at welcome   just the first few lines");
+        narrator::say("    peek at welcome     just the last few lines");
+        narrator::say("    inspect welcome     see all three registers (Φ Μ Λ)");
+        narrator::blank();
+        narrator::say("  Write");
+        narrator::say("    inscribe my-note    create a new document");
+        narrator::say("    revise welcome      edit an existing document");
+        narrator::say("    say hello           say something");
+        narrator::say("    say hello into note write text to a document");
+        narrator::blank();
+        narrator::say("  Find");
+        narrator::say("    search library      search all documents");
+        narrator::say("    catalogue           view the master index");
+        narrator::blank();
+        narrator::say("  Other");
+        narrator::say("    ledger              everything you've done today");
+        narrator::say("    turn-page           clear the screen");
+        narrator::say("    as-archivist        unlock restricted areas");
+        narrator::say("    leave               the lights go out");
     }
 
     // ── Helpers ──────────────────────────────────────────────────────
@@ -807,6 +817,14 @@ impl ShellState {
     }
 
     fn resolve_room(&self, name: &str) -> Option<PathBuf> {
+        // If we're already in the room they named, return cwd
+        let cwd_name = self.cwd.file_name()
+            .map(|n| n.to_string_lossy().to_string())
+            .unwrap_or_default();
+        let needle = name.to_lowercase().replace(' ', "-");
+        if cwd_name.to_lowercase() == needle {
+            return Some(self.cwd.clone());
+        }
         self.resolve_path(name).filter(|p| p.is_dir())
     }
 
