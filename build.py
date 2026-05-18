@@ -25,12 +25,18 @@ PAGES = [
 ]
 
 
-def strip_frontmatter(text):
+def parse_frontmatter(text):
+    """Return (meta_dict, body). Frontmatter is simple `key: value` lines."""
+    meta = {}
     if text.startswith("---"):
         end = text.find("---", 3)
         if end != -1:
-            return text[end + 3:].lstrip("\n")
-    return text
+            for line in text[3:end].strip().splitlines():
+                if ": " in line:
+                    k, v = line.split(": ", 1)
+                    meta[k.strip()] = v.strip()
+            return meta, text[end + 3:].lstrip("\n")
+    return meta, text
 
 
 def md_to_html(md):
@@ -168,13 +174,25 @@ def nav_html(current_slug):
     return "\n".join(items)
 
 
-def doc_template(title, content_html, current_slug):
+def doc_template(title, content_html, current_slug, description, out_name):
+    full_title = f"{title} — ΦΜΛ"
+    url = f"https://oma.ooo/docs/{out_name}"
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title} — \u03a6\u039c\u039b</title>
+<title>{full_title}</title>
+<meta name="description" content="{description}">
+<link rel="canonical" href="{url}">
+<meta property="og:title" content="{full_title}">
+<meta property="og:description" content="{description}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{url}">
+<meta property="og:site_name" content="ΦΜΛ — Open Manual Archive">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{full_title}">
+<meta name="twitter:description" content="{description}">
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -203,17 +221,18 @@ def build():
 
     for slug, title in PAGES:
         src = os.path.join(CONTENT_DIR, f"{slug}.mdx")
-        with open(src) as f:
+        with open(src, encoding="utf-8") as f:
             raw = f.read()
 
-        md = strip_frontmatter(raw)
+        meta, md = parse_frontmatter(raw)
         content = md_to_html(md)
+        description = meta.get("seo", meta.get("description", ""))
 
         out_name = "index.html" if slug == "index" else f"{slug}.html"
         out_path = os.path.join(OUT_DIR, out_name)
 
-        with open(out_path, "w") as f:
-            f.write(doc_template(title, content, slug))
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(doc_template(title, content, slug, description, out_name))
 
         print(f"  {out_path}")
 
