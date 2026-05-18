@@ -38,17 +38,104 @@ impl ShellState {
         let room = library::room_name(&self.cwd, &self.root);
         narrator::say(&format!("You are standing in {room}."));
         narrator::say("The lights are on. The shelves are full.");
-
-        let welcome = self.root.join("welcome");
-        if welcome.exists() {
-            narrator::say("A document rests on the desk: \"welcome\"");
-        }
+        narrator::say("A document rests on the desk: \"welcome\"");
 
         library::journal_write(&self.root, "The library opened.");
         library::journal_write(
             &self.root,
             &format!("A reader arrived: {}", self.reader_name),
         );
+
+        // First visit tour
+        self.offer_tour();
+    }
+
+    fn offer_tour(&mut self) {
+        narrator::blank();
+        narrator::say("How would you like to begin?");
+        narrator::blank();
+        narrator::say("  1  Read the welcome letter");
+        narrator::say("  2  Explore the library");
+        narrator::say("  3  Start writing");
+        narrator::blank();
+        narrator::say("Type a number, or just start typing commands.");
+
+        print!("\n> ");
+        io::stdout().flush().unwrap();
+
+        let mut input = String::new();
+        if io::stdin().read_line(&mut input).is_err() {
+            return;
+        }
+        let input = input.trim();
+
+        match input {
+            "1" => self.tour_read(),
+            "2" => self.tour_explore(),
+            "3" => self.tour_write(),
+            _ => {
+                // They typed a command — run it
+                if !input.is_empty() {
+                    self.execute(input);
+                }
+            }
+        }
+    }
+
+    fn tour_read(&mut self) {
+        narrator::blank();
+        self.execute("read welcome");
+        narrator::blank();
+        narrator::say("To see what else is here, type: browse");
+        narrator::say("To explore the wings, type: walk east wing");
+    }
+
+    fn tour_explore(&mut self) {
+        narrator::blank();
+        narrator::say("Let's walk through the library.");
+
+        self.execute("browse");
+
+        narrator::blank();
+        narrator::say("The east wing holds the technical collection. Let's go there.");
+        pause();
+
+        self.execute("walk east wing");
+        self.execute("browse");
+
+        narrator::blank();
+        narrator::say("The stacks have the main collection. Let's look inside.");
+        pause();
+
+        self.execute("walk stacks");
+        self.execute("browse");
+
+        narrator::blank();
+        narrator::say("Try reading one — type: read garden");
+        narrator::say("Or see how a document works — type: inspect garden");
+        narrator::blank();
+        narrator::say("You can also try: read the letter (it's in the west wing,");
+        narrator::say("but you don't need to walk there — names work from anywhere).");
+    }
+
+    fn tour_write(&mut self) {
+        narrator::blank();
+        narrator::say("Let's add something to the library.");
+        narrator::blank();
+        narrator::say("The west wing has a drafts room for work in progress.");
+
+        self.execute("walk west wing");
+        self.execute("browse");
+
+        narrator::blank();
+        narrator::say("To create your first document, type:");
+        narrator::say("  inscribe drafts/my-first-document");
+        narrator::blank();
+        narrator::say("Write anything — a note, a poem, a thought. Type .end when done.");
+        narrator::say("It becomes part of the library. The journal will record it.");
+        narrator::blank();
+        narrator::say("To make a document that DOES something, add a Λ layer:");
+        narrator::say("  read how to inscribe");
     }
 
     pub fn shutdown(&self) {
@@ -909,4 +996,11 @@ fn whoami() -> String {
     env::var("USER")
         .or_else(|_| env::var("LOGNAME"))
         .unwrap_or_else(|_| "a reader".into())
+}
+
+fn pause() {
+    print!("\n    (press enter to continue)\n");
+    let _ = io::stdout().flush();
+    let mut buf = String::new();
+    let _ = io::stdin().read_line(&mut buf);
 }
