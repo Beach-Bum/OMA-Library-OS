@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Three Registers — ΦΜΛ</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+  <div class="logo"><a href="/" style="text-decoration:none;color:inherit">ΦΜΛ</a></div>
+  <div class="subtitle">The Open Manual Archive</div>
+  <ul>
+<li><a href="/docs/">The Manual</a></li>
+<li><a href="/docs/quickstart.html">Getting Started</a></li>
+<li><a href="/docs/navigation.html">On Moving</a></li>
+<li><a href="/docs/reading.html">On Reading</a></li>
+<li><a href="/docs/registers.html" class="active">The Three Registers</a></li>
+<li><a href="/docs/writing.html">On Writing</a></li>
+<li><a href="/docs/lambda.html">The Λ Language</a></li>
+<li><a href="/docs/journal.html">The Journal</a></li>
+<li><a href="/docs/living-documents.html">Living Documents</a></li>
+<li><a href="/docs/fundament.html">The Fundament</a></li>
+<li><a href="/docs/connecting.html">Connecting Libraries</a></li>
+<li><a href="/docs/commands.html">Command Reference</a></li>
+  </ul>
+</nav>
+<main>
+<h1>The Three Registers</h1>
+<p>Every document has three layers.</p>
+<p><strong>Φ (Form)</strong> — where it is. Its room, its shelf, its classification. Structure.</p>
+<p><strong>Μ (Message)</strong> — what it says. The words. Content.</p>
+<p><strong>Λ (Lambda)</strong> — what it does. Logic that runs when read. Action.</p>
+<p>To see all three:</p>
+<pre><code>
+&gt; inspect the erosion
+
+    Φ (Form)
+      Location: east-wing/stacks/the-erosion
+      Classification: process, living document
+      Size: 847 bytes
+
+    Μ (Message)
+      Content: &quot;This story loses a line each time...&quot;
+
+    Λ (Lambda)
+      set visits ← read-count
+      if visits &gt; 1:
+        erode self 1
+</code></pre>
+<p>Not every document has all three. A letter has Φ and Μ but no Λ — it sits on a shelf and says something but does nothing. A blank page has only Φ — a place with nothing to say. The richest documents have all three and are, in a sense, alive.</p>
+<h2>File format</h2>
+<p>A document is a plain text file. The Λ layer is separated by <code>--- Λ ---</code>:</p>
+<pre><code>
+This is the visible text (Μ layer).
+
+--- Λ ---
+say &quot;This runs when the document is read.&quot;
+</code></pre>
+<p>Documents without the separator have no Λ layer. They are still.</p>
+<div class="doc-footer">
+  <a href="/">ΦΜΛ</a> &middot; <a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a>
+</div>
+</main>
+</div>
+</body>
+</html>

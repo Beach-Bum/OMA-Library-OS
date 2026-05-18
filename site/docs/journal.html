@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Journal — ΦΜΛ</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+  <div class="logo"><a href="/" style="text-decoration:none;color:inherit">ΦΜΛ</a></div>
+  <div class="subtitle">The Open Manual Archive</div>
+  <ul>
+<li><a href="/docs/">The Manual</a></li>
+<li><a href="/docs/quickstart.html">Getting Started</a></li>
+<li><a href="/docs/navigation.html">On Moving</a></li>
+<li><a href="/docs/reading.html">On Reading</a></li>
+<li><a href="/docs/registers.html">The Three Registers</a></li>
+<li><a href="/docs/writing.html">On Writing</a></li>
+<li><a href="/docs/lambda.html">The Λ Language</a></li>
+<li><a href="/docs/journal.html" class="active">The Journal</a></li>
+<li><a href="/docs/living-documents.html">Living Documents</a></li>
+<li><a href="/docs/fundament.html">The Fundament</a></li>
+<li><a href="/docs/connecting.html">Connecting Libraries</a></li>
+<li><a href="/docs/commands.html">Command Reference</a></li>
+  </ul>
+</nav>
+<main>
+<h1>The Journal</h1>
+<p>The journal lives in <code>west-wing/journal/</code> with one file per day:</p>
+<pre><code>
+&gt; read west-wing/journal/2026-05-18
+
+    06:00  The library opened.
+    06:00  A reader arrived: ned
+    06:01  The reader read &quot;welcome&quot;.
+    06:04  The reader read &quot;the-garden-of-forking-paths&quot;.
+    06:04  The reader reached the fork in the garden.
+    06:12  The reader read &quot;the-confession&quot;.
+    06:12  The confession was read and withdrew itself.
+    06:12  The catalogue still lists it. The shelves do not.
+    07:00  The library closed.
+</code></pre>
+<p>The journal is append-only. Everything else can be changed, moved, withdrawn, eroded. The journal persists. It is the library&#x27;s memory.</p>
+<p>In archival science this is called a finding aid — the document that describes the collection. Most finding aids are written after the fact. This one writes itself in real time. It is the most honest document in the library because it has no author. It simply records.</p>
+<p>Λ scripts write to the journal with:</p>
+<pre><code>
+write west-wing/journal/{date} &quot;{time} Something happened.&quot;
+</code></pre>
+<div class="doc-footer">
+  <a href="/">ΦΜΛ</a> &middot; <a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a>
+</div>
+</main>
+</div>
+</body>
+</html>

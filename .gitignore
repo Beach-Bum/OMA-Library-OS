@@ -9,5 +9,5 @@ __pycache__/
 /target
 /target/
 Cargo.lock
-site/node_modules/
-site/.next/
+_content-backup/
+.gstack/

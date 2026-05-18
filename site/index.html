@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ΦΜΛ — A library that is also an operating system</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="landing">
+
+<h1>ΦΜΛ</h1>
+<p class="tagline">A library that is also an operating system.</p>
+
+<p>Boot a terminal. You are standing in an entrance hall. The shelves are full.
+A document rests on the desk. You can read it, explore the rooms, write your
+own documents, and rebuild the library from the inside. No two libraries
+will ever be the same.</p>
+
+<pre><code>$ git clone https://github.com/Beach-Bum/phi-mu-lambda.git
+$ cd phi-mu-lambda && cargo build --release
+$ oma</code></pre>
+
+<p>One binary. Under 1MB. No dependencies beyond a terminal.</p>
+
+<hr>
+
+<p>Every document carries three registers:</p>
+
+<ul>
+<li><strong>Φ (Form)</strong> — where it is. Its room, its shelf, its classification.</li>
+<li><strong>Μ (Message)</strong> — what it says. The text you read.</li>
+<li><strong>Λ (Lambda)</strong> — what it does. Logic that runs when you read it.</li>
+</ul>
+
+<pre><code>> read welcome
+
+    Welcome to the Open Manual Archive.
+    You are the first reader today...
+
+> inspect welcome
+
+    Φ (Form)
+      Location: welcome
+      Classification: document, still
+
+    Μ (Message)
+      "Welcome to the Open Manual Archive..."
+
+    Λ (Lambda)
+      (none — this document is still)</code></pre>
+
+<hr>
+
+<nav>
+<p><strong>Manual</strong></p>
+<ul>
+<li><a href="/docs/">The Manual</a></li>
+<li><a href="/docs/quickstart.html">Getting Started</a></li>
+<li><a href="/docs/navigation.html">On Moving</a></li>
+<li><a href="/docs/reading.html">On Reading</a></li>
+<li><a href="/docs/registers.html">The Three Registers</a></li>
+<li><a href="/docs/writing.html">On Writing</a></li>
+<li><a href="/docs/lambda.html">The Λ Language</a></li>
+<li><a href="/docs/journal.html">The Journal</a></li>
+<li><a href="/docs/living-documents.html">Living Documents</a></li>
+<li><a href="/docs/fundament.html">The Fundament</a></li>
+<li><a href="/docs/connecting.html">Connecting Libraries</a></li>
+<li><a href="/docs/commands.html">Command Reference</a></li>
+</ul>
+</nav>
+
+<hr>
+
+<p>In Dutch, <em>oma</em> means grandmother — the keeper of stories,
+the one whose house you explore as a child, opening drawers, finding
+things that don't quite make sense yet. Both meanings are always present.</p>
+
+<div class="meta">
+<a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a> · MIT
+</div>
+
+</div>
+</body>
+</html>

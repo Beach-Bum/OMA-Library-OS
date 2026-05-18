@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>On Moving — ΦΜΛ</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+  <div class="logo"><a href="/" style="text-decoration:none;color:inherit">ΦΜΛ</a></div>
+  <div class="subtitle">The Open Manual Archive</div>
+  <ul>
+<li><a href="/docs/">The Manual</a></li>
+<li><a href="/docs/quickstart.html">Getting Started</a></li>
+<li><a href="/docs/navigation.html" class="active">On Moving</a></li>
+<li><a href="/docs/reading.html">On Reading</a></li>
+<li><a href="/docs/registers.html">The Three Registers</a></li>
+<li><a href="/docs/writing.html">On Writing</a></li>
+<li><a href="/docs/lambda.html">The Λ Language</a></li>
+<li><a href="/docs/journal.html">The Journal</a></li>
+<li><a href="/docs/living-documents.html">Living Documents</a></li>
+<li><a href="/docs/fundament.html">The Fundament</a></li>
+<li><a href="/docs/connecting.html">Connecting Libraries</a></li>
+<li><a href="/docs/commands.html">Command Reference</a></li>
+  </ul>
+</nav>
+<main>
+<h1>On Moving</h1>
+<p>The library is a building with rooms. You move between them by walking.</p>
+<pre><code>
+&gt; walk east wing
+</code></pre>
+<p>You are now in the East Wing. The library tells you where you are and what it feels like:</p>
+<pre><code>
+You are in the East Wing — Technical Collection.
+The air is cooler here. The shelves are metal.
+</code></pre>
+<p>Every room has a feeling. The east wing is cool and technical. The west wing is warm and personal. The basement is heavy and locked. These are not decorations — they are classifications. The temperature of a room tells you what kind of knowledge lives there.</p>
+<h2>Commands</h2>
+<table>
+<tr><th>Command</th><th>Effect</th></tr>
+<tr><td><code>walk east wing</code></td><td>Go to the east wing</td></tr>
+<tr><td><code>walk stacks</code></td><td>Go to stacks (if visible)</td></tr>
+<tr><td><code>walk correspondence</code></td><td>Finds it anywhere in the library</td></tr>
+<tr><td><code>walk back</code></td><td>Previous room</td></tr>
+<tr><td><code>walk lobby</code></td><td>Entrance hall</td></tr>
+<tr><td><code>where</code></td><td>Where am I?</td></tr>
+</table>
+<p>You don&#x27;t need exact names. &quot;east wing&quot; and &quot;east-wing&quot; both work. The library searches for what you mean — first the current room, then the entrance hall, then every room in the building.</p>
+<h2>The floor plan</h2>
+<pre><code>
+Entrance Hall
+├── east-wing/          Technical collection
+│   ├── stacks/         The main shelves
+│   ├── processes/      Living documents
+│   ├── devices/        Building infrastructure
+│   ├── utilities/      Reader-built tools
+│   └── networking/     Connections to other libraries
+├── west-wing/          Letters &amp; ephemera
+│   ├── correspondence/ Letters
+│   ├── drafts/         Work in progress
+│   ├── journal/        The library&#x27;s diary
+│   └── ephemera/       Temporary documents
+├── basement/           Restricted (as-archivist)
+│   ├── fundament/      The building itself
+│   ├── blueprints/     Configuration
+│   └── vault/          Archivist&#x27;s private collection
+├── acquisitions/       Newly arrived
+├── reading-room/       Active sessions
+└── other-libraries/    External storage
+</code></pre>
+<h2>The basement</h2>
+<p>One room requires permission:</p>
+<pre><code>
+&gt; walk basement
+    The basement door is locked.
+
+&gt; as-archivist walk basement
+    You are in the Basement (restricted).
+</code></pre>
+<p><code>as-archivist</code> is not a password. It is a role. You are declaring responsibility for what you find there.</p>
+<div class="doc-footer">
+  <a href="/">ΦΜΛ</a> &middot; <a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a>
+</div>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>On Reading — ΦΜΛ</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+  <div class="logo"><a href="/" style="text-decoration:none;color:inherit">ΦΜΛ</a></div>
+  <div class="subtitle">The Open Manual Archive</div>
+  <ul>
+<li><a href="/docs/">The Manual</a></li>
+<li><a href="/docs/quickstart.html">Getting Started</a></li>
+<li><a href="/docs/navigation.html">On Moving</a></li>
+<li><a href="/docs/reading.html" class="active">On Reading</a></li>
+<li><a href="/docs/registers.html">The Three Registers</a></li>
+<li><a href="/docs/writing.html">On Writing</a></li>
+<li><a href="/docs/lambda.html">The Λ Language</a></li>
+<li><a href="/docs/journal.html">The Journal</a></li>
+<li><a href="/docs/living-documents.html">Living Documents</a></li>
+<li><a href="/docs/fundament.html">The Fundament</a></li>
+<li><a href="/docs/connecting.html">Connecting Libraries</a></li>
+<li><a href="/docs/commands.html">Command Reference</a></li>
+  </ul>
+</nav>
+<main>
+<h1>On Reading</h1>
+<p>A document is a thing that says something. To hear what it says:</p>
+<pre><code>
+&gt; read welcome
+</code></pre>
+<p>You can read anything by name from anywhere. Names are flexible:</p>
+<pre><code>
+&gt; read the letter       → finds west-wing/correspondence/the-letter
+&gt; read garden           → finds the-garden-of-forking-paths
+&gt; read maintenance      → finds on-the-maintenance-of-shelves
+</code></pre>
+<h2>Variants</h2>
+<table>
+<tr><th>Command</th><th>Shows</th><th>Executes Λ?</th></tr>
+<tr><td><code>read doc</code></td><td>Full text</td><td>Yes</td></tr>
+<tr><td><code>glance at doc</code></td><td>First 5 lines</td><td>No</td></tr>
+<tr><td><code>peek at doc</code></td><td>Last 5 lines</td><td>No</td></tr>
+<tr><td><code>inspect doc</code></td><td>All three registers</td><td>No</td></tr>
+</table>
+<h2>What happens when you read</h2>
+<p>Reading is not passive. Three things happen:</p>
+<p>1. The text appears on your screen 2. The journal records that you read it 3. If the document has a Λ layer, that logic runs</p>
+<p>Most documents are still — text and nothing more. But some are alive. The letter from the archivist writes to the journal. The erosion loses a line of its own text. The confession deletes itself.</p>
+<p>You cannot tell by looking whether a document is alive. This is by design. In a library, you do not know whether a book will change you until you&#x27;ve read it.</p>
+<div class="doc-footer">
+  <a href="/">ΦΜΛ</a> &middot; <a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a>
+</div>
+</main>
+</div>
+</body>
+</html>

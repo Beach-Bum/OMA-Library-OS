@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting Started — ΦΜΛ</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+  <div class="logo"><a href="/" style="text-decoration:none;color:inherit">ΦΜΛ</a></div>
+  <div class="subtitle">The Open Manual Archive</div>
+  <ul>
+<li><a href="/docs/">The Manual</a></li>
+<li><a href="/docs/quickstart.html" class="active">Getting Started</a></li>
+<li><a href="/docs/navigation.html">On Moving</a></li>
+<li><a href="/docs/reading.html">On Reading</a></li>
+<li><a href="/docs/registers.html">The Three Registers</a></li>
+<li><a href="/docs/writing.html">On Writing</a></li>
+<li><a href="/docs/lambda.html">The Λ Language</a></li>
+<li><a href="/docs/journal.html">The Journal</a></li>
+<li><a href="/docs/living-documents.html">Living Documents</a></li>
+<li><a href="/docs/fundament.html">The Fundament</a></li>
+<li><a href="/docs/connecting.html">Connecting Libraries</a></li>
+<li><a href="/docs/commands.html">Command Reference</a></li>
+  </ul>
+</nav>
+<main>
+<h1>Getting Started</h1>
+<h2>Install</h2>
+<pre><code>
+git clone https://github.com/Beach-Bum/phi-mu-lambda.git
+cd phi-mu-lambda
+cargo build --release
+cp target/release/oma ~/.local/bin/
+</code></pre>
+<p>One binary. Under 1MB. Needs Rust to build, nothing to run.</p>
+<h2>First boot</h2>
+<pre><code>
+oma
+</code></pre>
+<p>The library creates itself at <code>~/oma-library/</code>. Twelve founding documents appear on the shelves. A journal starts recording. You&#x27;re in.</p>
+<pre><code>
+╔═══════════════════════════════╗
+║    THE OPEN MANUAL ARCHIVE    ║
+╚═══════════════════════════════╝
+
+You are standing in the Entrance Hall.
+The lights are on. The shelves are full.
+A document rests on the desk: &quot;welcome&quot;
+
+How would you like to begin?
+
+  1  Read the welcome letter
+  2  Explore the library
+  3  Start writing
+</code></pre>
+<p>Pick a number or type any command. The tour is a door, not a wall.</p>
+<h2>Configuration</h2>
+<table>
+<tr><th>Variable</th><th>Default</th><th>Purpose</th></tr>
+<tr><td><code>OMA_ROOT</code></td><td><code>~/oma-library</code></td><td>Library location</td></tr>
+<tr><td><code>USER</code></td><td>system username</td><td>Reader name in journal</td></tr>
+</table>
+<pre><code>
+OMA_ROOT=/mnt/usb/my-library oma    # custom location
+</code></pre>
+<h2>Uninstall</h2>
+<pre><code>
+rm ~/.local/bin/oma      # remove binary
+rm -rf ~/oma-library     # remove library
+</code></pre>
+<p>Nothing else to clean. No system files. No hidden state.</p>
+<h2>Cross-compile for Raspberry Pi</h2>
+<pre><code>
+rustup target add aarch64-unknown-linux-musl
+cargo build --release --target aarch64-unknown-linux-musl
+scp target/aarch64-unknown-linux-musl/release/oma pi@raspberrypi:~/
+</code></pre>
+<div class="doc-footer">
+  <a href="/">ΦΜΛ</a> &middot; <a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a>
+</div>
+</main>
+</div>
+</body>
+</html>

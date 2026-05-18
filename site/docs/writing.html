@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>On Writing — ΦΜΛ</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+  <div class="logo"><a href="/" style="text-decoration:none;color:inherit">ΦΜΛ</a></div>
+  <div class="subtitle">The Open Manual Archive</div>
+  <ul>
+<li><a href="/docs/">The Manual</a></li>
+<li><a href="/docs/quickstart.html">Getting Started</a></li>
+<li><a href="/docs/navigation.html">On Moving</a></li>
+<li><a href="/docs/reading.html">On Reading</a></li>
+<li><a href="/docs/registers.html">The Three Registers</a></li>
+<li><a href="/docs/writing.html" class="active">On Writing</a></li>
+<li><a href="/docs/lambda.html">The Λ Language</a></li>
+<li><a href="/docs/journal.html">The Journal</a></li>
+<li><a href="/docs/living-documents.html">Living Documents</a></li>
+<li><a href="/docs/fundament.html">The Fundament</a></li>
+<li><a href="/docs/connecting.html">Connecting Libraries</a></li>
+<li><a href="/docs/commands.html">Command Reference</a></li>
+  </ul>
+</nav>
+<main>
+<h1>On Writing</h1>
+<p>The library was not meant to be complete without you.</p>
+<h2>Create a document</h2>
+<pre><code>
+&gt; inscribe west-wing/drafts/my-first-note
+
+Today I found a library inside my computer.
+I don&#x27;t know who built it.
+
+.end
+</code></pre>
+<p>Type <code>.end</code> to finish. The document is on the shelf. The journal records it. The catalogue will find it.</p>
+<h2>Create a living document</h2>
+<p>Add a Λ layer:</p>
+<pre><code>
+&gt; inscribe east-wing/utilities/greeter
+
+This document greets you.
+
+--- Λ ---
+say &quot;Hello, {reader}. You&#x27;ve read {documents-read} documents today.&quot;
+
+.end
+</code></pre>
+<h2>Edit</h2>
+<pre><code>
+&gt; revise welcome
+</code></pre>
+<p>Shows current text, then opens for replacement.</p>
+<h2>Move and copy</h2>
+<table>
+<tr><th>Command</th><th>Effect</th></tr>
+<tr><td><code>transcribe A to B/</code></td><td>Copy</td></tr>
+<tr><td><code>reshelve A to B/</code></td><td>Move</td></tr>
+<tr><td><code>withdraw A</code></td><td>Delete (journal records it)</td></tr>
+</table>
+<h2>Rooms</h2>
+<table>
+<tr><th>Command</th><th>Effect</th></tr>
+<tr><td><code>open-room name</code></td><td>Create a room</td></tr>
+<tr><td><code>close-room name</code></td><td>Remove empty room</td></tr>
+</table>
+<h2>Output</h2>
+<table>
+<tr><th>Command</th><th>Effect</th></tr>
+<tr><td><code>say hello</code></td><td>Print to screen</td></tr>
+<tr><td><code>say hello into note</code></td><td>Write to file</td></tr>
+<tr><td><code>say hello onto note</code></td><td>Append to file</td></tr>
+</table>
+<div class="doc-footer">
+  <a href="/">ΦΜΛ</a> &middot; <a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a>
+</div>
+</main>
+</div>
+</body>
+</html>

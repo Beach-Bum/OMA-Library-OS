@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connecting Libraries — ΦΜΛ</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+  <div class="logo"><a href="/" style="text-decoration:none;color:inherit">ΦΜΛ</a></div>
+  <div class="subtitle">The Open Manual Archive</div>
+  <ul>
+<li><a href="/docs/">The Manual</a></li>
+<li><a href="/docs/quickstart.html">Getting Started</a></li>
+<li><a href="/docs/navigation.html">On Moving</a></li>
+<li><a href="/docs/reading.html">On Reading</a></li>
+<li><a href="/docs/registers.html">The Three Registers</a></li>
+<li><a href="/docs/writing.html">On Writing</a></li>
+<li><a href="/docs/lambda.html">The Λ Language</a></li>
+<li><a href="/docs/journal.html">The Journal</a></li>
+<li><a href="/docs/living-documents.html">Living Documents</a></li>
+<li><a href="/docs/fundament.html">The Fundament</a></li>
+<li><a href="/docs/connecting.html" class="active">Connecting Libraries</a></li>
+<li><a href="/docs/commands.html">Command Reference</a></li>
+  </ul>
+</nav>
+<main>
+<h1>Connecting Libraries</h1>
+<p>Every library is a folder on a disk. This makes them trivially shareable.</p>
+<h2>Fork</h2>
+<pre><code>
+cp -r ~/oma-library ~/second-library
+OMA_ROOT=~/second-library oma
+</code></pre>
+<p>Two libraries. Same origin. Different futures. Like branches of a library system, each growing around its community.</p>
+<h2>Mail</h2>
+<p>Mount a shared folder and annex it:</p>
+<pre><code>
+&gt; as-archivist
+&gt; annex /media/shared as other-libraries/friend
+</code></pre>
+<p>Send a document:</p>
+<pre><code>
+&gt; transcribe west-wing/correspondence/hello to other-libraries/friend/acquisitions/
+</code></pre>
+<p>It appears in your friend&#x27;s acquisitions room. No server. No protocol. Just files on a shared surface.</p>
+<h2>What works</h2>
+<p>NFS, Syncthing, USB sticks, SMB shares — anything that moves folders. Documents are text files. Sharing is copying.</p>
+<div class="doc-footer">
+  <a href="/">ΦΜΛ</a> &middot; <a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a>
+</div>
+</main>
+</div>
+</body>
+</html>

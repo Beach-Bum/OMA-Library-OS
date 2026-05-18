@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Λ Language — ΦΜΛ</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+  <div class="logo"><a href="/" style="text-decoration:none;color:inherit">ΦΜΛ</a></div>
+  <div class="subtitle">The Open Manual Archive</div>
+  <ul>
+<li><a href="/docs/">The Manual</a></li>
+<li><a href="/docs/quickstart.html">Getting Started</a></li>
+<li><a href="/docs/navigation.html">On Moving</a></li>
+<li><a href="/docs/reading.html">On Reading</a></li>
+<li><a href="/docs/registers.html">The Three Registers</a></li>
+<li><a href="/docs/writing.html">On Writing</a></li>
+<li><a href="/docs/lambda.html" class="active">The Λ Language</a></li>
+<li><a href="/docs/journal.html">The Journal</a></li>
+<li><a href="/docs/living-documents.html">Living Documents</a></li>
+<li><a href="/docs/fundament.html">The Fundament</a></li>
+<li><a href="/docs/connecting.html">Connecting Libraries</a></li>
+<li><a href="/docs/commands.html">Command Reference</a></li>
+  </ul>
+</nav>
+<main>
+<h1>The Λ Language</h1>
+<p>Λ is the scripting language in document margins. It runs when a document is <code>read</code>.</p>
+<h2>Instructions</h2>
+<table>
+<tr><th>Instruction</th><th>Syntax</th><th>Effect</th></tr>
+<tr><td>say</td><td><code>say &quot;text&quot;</code></td><td>Print. <code>{var}</code> substitution.</td></tr>
+<tr><td>write</td><td><code>write path &quot;text&quot;</code></td><td>Append line to file</td></tr>
+<tr><td>set</td><td><code>set name &quot;value&quot;</code></td><td>Set variable</td></tr>
+<tr><td>set ←</td><td><code>set name ← expr</code></td><td>Set from expression</td></tr>
+<tr><td>if</td><td><code>if cond:</code></td><td>Conditional (indented block)</td></tr>
+<tr><td>inscribe</td><td><code>inscribe path</code></td><td>Create file (indented = content)</td></tr>
+<tr><td>withdraw</td><td><code>withdraw path</code></td><td>Delete file</td></tr>
+<tr><td>erode self</td><td><code>erode self N</code></td><td>Remove N lines from own text</td></tr>
+<tr><td>mutate self</td><td><code>mutate self &quot;old&quot; &quot;new&quot;</code></td><td>Replace in own text</td></tr>
+<tr><td>wait</td><td><code>wait Ns</code></td><td>Pause N seconds</td></tr>
+</table>
+<h2>Expressions</h2>
+<table>
+<tr><th>Expression</th><th>Returns</th></tr>
+<tr><td><code>count path/*</code></td><td>Number of items in directory</td></tr>
+<tr><td><code>read-count</code></td><td>Times this document was read</td></tr>
+<tr><td><code>random-line path</code></td><td>Random line from a file</td></tr>
+<tr><td><code>random-choice path/</code></td><td>Random filename from directory</td></tr>
+<tr><td><code>ask &quot;prompt&quot;</code></td><td>Reader&#x27;s typed input</td></tr>
+</table>
+<h2>Conditions</h2>
+<table>
+<tr><th>Form</th><th>True when</th></tr>
+<tr><td><code>var &gt; N</code></td><td>Greater than</td></tr>
+<tr><td><code>var &lt; N</code></td><td>Less than</td></tr>
+<tr><td><code>var == &quot;text&quot;</code></td><td>Equals</td></tr>
+<tr><td><code>var</code></td><td>Non-empty, not &quot;0&quot;</td></tr>
+</table>
+<h2>Built-in variables</h2>
+<table>
+<tr><th>Variable</th><th>Contains</th></tr>
+<tr><td><code>{reader}</code></td><td>Username</td></tr>
+<tr><td><code>{time}</code></td><td>HH:MM:SS</td></tr>
+<tr><td><code>{date}</code></td><td>YYYY-MM-DD</td></tr>
+<tr><td><code>{documents-read}</code></td><td>Session count</td></tr>
+<tr><td><code>{read-count}</code></td><td>This document&#x27;s read count</td></tr>
+<tr><td><code>{document}</code></td><td>This document&#x27;s name</td></tr>
+</table>
+<h2>Example</h2>
+<pre><code>
+A greeting that remembers you.
+
+--- Λ ---
+set visits ← read-count
+if visits == &quot;1&quot;:
+  say &quot;Welcome, {reader}. First visit.&quot;
+if visits &gt; 1:
+  say &quot;Welcome back. Visit #{visits}.&quot;
+set mood ← ask &quot;How are you?&quot;
+say &quot;Noted: {reader} is {mood}.&quot;
+write west-wing/journal/{date} &quot;{time} {reader}: {mood}&quot;
+</code></pre>
+<div class="doc-footer">
+  <a href="/">ΦΜΛ</a> &middot; <a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a>
+</div>
+</main>
+</div>
+</body>
+</html>

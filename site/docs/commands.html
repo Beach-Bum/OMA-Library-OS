@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Command Reference — ΦΜΛ</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+  <div class="logo"><a href="/" style="text-decoration:none;color:inherit">ΦΜΛ</a></div>
+  <div class="subtitle">The Open Manual Archive</div>
+  <ul>
+<li><a href="/docs/">The Manual</a></li>
+<li><a href="/docs/quickstart.html">Getting Started</a></li>
+<li><a href="/docs/navigation.html">On Moving</a></li>
+<li><a href="/docs/reading.html">On Reading</a></li>
+<li><a href="/docs/registers.html">The Three Registers</a></li>
+<li><a href="/docs/writing.html">On Writing</a></li>
+<li><a href="/docs/lambda.html">The Λ Language</a></li>
+<li><a href="/docs/journal.html">The Journal</a></li>
+<li><a href="/docs/living-documents.html">Living Documents</a></li>
+<li><a href="/docs/fundament.html">The Fundament</a></li>
+<li><a href="/docs/connecting.html">Connecting Libraries</a></li>
+<li><a href="/docs/commands.html" class="active">Command Reference</a></li>
+  </ul>
+</nav>
+<main>
+<h1>Command Reference</h1>
+<h2>Navigation</h2>
+<table>
+<tr><th>Command</th><th>Syntax</th><th>Unix</th></tr>
+<tr><td>walk</td><td><code>walk &lt;room&gt;</code></td><td><code>cd</code></td></tr>
+<tr><td>walk back</td><td><code>walk back</code></td><td><code>cd ..</code></td></tr>
+<tr><td>walk lobby</td><td><code>walk lobby</code></td><td><code>cd ~</code></td></tr>
+<tr><td>where</td><td><code>where</code></td><td><code>pwd</code></td></tr>
+</table>
+<h2>Reading</h2>
+<table>
+<tr><th>Command</th><th>Syntax</th><th>Unix</th></tr>
+<tr><td>read</td><td><code>read &lt;doc&gt;</code></td><td><code>cat</code></td></tr>
+<tr><td>glance</td><td><code>glance at &lt;doc&gt;</code></td><td><code>head -5</code></td></tr>
+<tr><td>peek</td><td><code>peek at &lt;doc&gt;</code></td><td><code>tail -5</code></td></tr>
+<tr><td>inspect</td><td><code>inspect &lt;doc&gt;</code></td><td><code>stat + cat</code></td></tr>
+<tr><td>browse</td><td><code>browse [room]</code></td><td><code>ls -la</code></td></tr>
+</table>
+<h2>Writing</h2>
+<table>
+<tr><th>Command</th><th>Syntax</th><th>Unix</th></tr>
+<tr><td>inscribe</td><td><code>inscribe &lt;path&gt;</code></td><td><code>cat &gt;</code></td></tr>
+<tr><td>revise</td><td><code>revise &lt;doc&gt;</code></td><td><code>$EDITOR</code></td></tr>
+<tr><td>say</td><td><code>say &lt;text&gt;</code></td><td><code>echo</code></td></tr>
+<tr><td>say into</td><td><code>say X into file</code></td><td><code>echo &gt;</code></td></tr>
+<tr><td>say onto</td><td><code>say X onto file</code></td><td><code>echo &gt;&gt;</code></td></tr>
+</table>
+<h2>Organisation</h2>
+<table>
+<tr><th>Command</th><th>Syntax</th><th>Unix</th></tr>
+<tr><td>transcribe</td><td><code>transcribe A to B</code></td><td><code>cp</code></td></tr>
+<tr><td>reshelve</td><td><code>reshelve A to B</code></td><td><code>mv</code></td></tr>
+<tr><td>withdraw</td><td><code>withdraw &lt;doc&gt;</code></td><td><code>rm</code></td></tr>
+<tr><td>open-room</td><td><code>open-room &lt;name&gt;</code></td><td><code>mkdir</code></td></tr>
+<tr><td>close-room</td><td><code>close-room &lt;name&gt;</code></td><td><code>rmdir</code></td></tr>
+</table>
+<h2>Search</h2>
+<table>
+<tr><th>Command</th><th>Syntax</th><th>Unix</th></tr>
+<tr><td>search</td><td><code>search &lt;query&gt;</code></td><td><code>grep -ri</code></td></tr>
+<tr><td>scan</td><td><code>scan &lt;phrase&gt;</code></td><td><code>grep -r</code></td></tr>
+<tr><td>catalogue</td><td><code>catalogue</code></td><td><code>locate</code></td></tr>
+</table>
+<h2>System</h2>
+<table>
+<tr><th>Command</th><th>Syntax</th><th>Unix</th></tr>
+<tr><td>readers</td><td><code>readers</code></td><td><code>who</code></td></tr>
+<tr><td>activity</td><td><code>activity</code></td><td><code>uptime</code></td></tr>
+<tr><td>inventory</td><td><code>inventory</code></td><td><code>df -h</code></td></tr>
+<tr><td>ledger</td><td><code>ledger</code></td><td><code>history</code></td></tr>
+<tr><td>turn-page</td><td><code>turn-page</code></td><td><code>clear</code></td></tr>
+<tr><td>as-archivist</td><td><code>as-archivist</code></td><td><code>sudo</code></td></tr>
+<tr><td>annex</td><td><code>annex &lt;dev&gt; as &lt;name&gt;</code></td><td><code>mount</code></td></tr>
+<tr><td>seal</td><td><code>seal &lt;name&gt;</code></td><td><code>umount</code></td></tr>
+<tr><td>leave</td><td><code>leave</code></td><td><code>exit</code></td></tr>
+<tr><td>help</td><td><code>help</code> / <code>?</code></td><td><code>man</code></td></tr>
+</table>
+<h2>Operators</h2>
+<table>
+<tr><th>Operator</th><th>Syntax</th><th>Unix</th></tr>
+<tr><td>then</td><td><code>cmd1 then cmd2</code></td><td>`\</td><td>`</td></tr>
+<tr><td>into</td><td><code>say X into file</code></td><td><code>&gt;</code></td></tr>
+<tr><td>onto</td><td><code>say X onto file</code></td><td><code>&gt;&gt;</code></td></tr>
+</table>
+<h2>Glossary</h2>
+<table>
+<tr><th>In the library</th><th>In Unix</th><th>In philosophy</th></tr>
+<tr><td>Document</td><td>File</td><td>Record</td></tr>
+<tr><td>Room</td><td>Directory</td><td>Category</td></tr>
+<tr><td>The Fundament</td><td>Kernel</td><td>Substrate</td></tr>
+<tr><td>The Journal</td><td>syslog</td><td>Finding aid</td></tr>
+<tr><td>The Archivist</td><td>root</td><td>Authority</td></tr>
+<tr><td>Λ layer</td><td>Script</td><td>Agency</td></tr>
+<tr><td>Μ layer</td><td>Content</td><td>Message</td></tr>
+<tr><td>Φ layer</td><td>Metadata</td><td>Form</td></tr>
+</table>
+<div class="doc-footer">
+  <a href="/">ΦΜΛ</a> &middot; <a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a>
+</div>
+</main>
+</div>
+</body>
+</html>
