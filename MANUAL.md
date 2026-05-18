@@ -603,7 +603,14 @@ The library was designed to be rebuilt from the inside. The archivist's letter s
 ```bash
 git clone https://github.com/Beach-Bum/oma.git
 cd oma
+make build
+```
+
+Or without make:
+
+```bash
 cargo build --release
+strip target/release/oma
 cp target/release/oma ~/.local/bin/
 ```
 
@@ -653,7 +660,8 @@ Every command, its syntax, and what it does underneath.
 | `read` | `read <doc>` | `cat` | Shows Μ, executes Λ, increments read count, writes journal |
 | `glance` | `glance at <doc>` | `head -5` | First 5 lines only. No Λ execution |
 | `peek` | `peek at <doc>` | `tail -5` | Last 5 lines only. No Λ execution |
-| `inspect` | `inspect <doc\|room>` | `stat + cat` | Shows all three registers. No Λ execution |
+| `inspect` | `inspect <doc\|room>` | `stat + cat` | Shows all three registers. No Λ execution. Detects embedded programs |
+| `inspect -deep` | `inspect <doc> -deep` | — | Full grid view for ΦΜΛ grid programs |
 | `browse` | `browse [room]` | `ls -la` | Shows nested contents. Fuzzy room match |
 | `browse -quietly` | `browse -quietly` | `ls` | Names only |
 
@@ -683,7 +691,7 @@ Every command, its syntax, and what it does underneath.
 |---------|--------|------|-------|
 | `search` | `search <query>` | `grep -ri` | Recursive from library root |
 | `scan` | `scan <phrase>` | `grep -r` | Current room. Or: `scan "x" in path/` |
-| `catalogue` | `catalogue` | `locate` | Reads the master catalogue document |
+| `catalogue` | `catalogue` | `locate` | Live index of all documents + phantom entries |
 
 ### System
 
@@ -695,8 +703,9 @@ Every command, its syntax, and what it does underneath.
 | `ledger` | `ledger` | `history` | All commands this session |
 | `turn-page` | `turn-page` | `clear` | Clear screen |
 | `as-archivist` | `as-archivist [cmd]` | `sudo` | Toggle elevation or run one command |
-| `annex` | `annex <dev> as <name>` | `mount` | Attach external storage |
-| `seal` | `seal <name>` | `umount` | Detach external storage |
+| `annex` | `annex <path> as <name>` | `mount` | Attach external storage (as-archivist) |
+| `seal` | `seal <name>` | `umount` | Detach external storage (as-archivist) |
+| `classify` | `classify <level> <doc>` | `chmod` | Set access: public, restricted, classified (as-archivist) |
 | `leave` | `leave` | `exit` | Close the library. Also: `exit`, `quit` |
 | `help` | `help` | `man` | Also: `?`, `what`, `how` |
 
@@ -721,6 +730,8 @@ Every command, its syntax, and what it does underneath.
 | set | `set name "value"` | Set variable |
 | set ← | `set name ← expr` | Set from expression |
 | if | `if cond:` | Conditional (indented block) |
+| loop | `loop:` | Infinite loop (indented block, 10K iteration cap) |
+| loop while | `loop while cond:` | Conditional loop (indented block) |
 | inscribe | `inscribe path` | Create file (indented = content) |
 | withdraw | `withdraw path` | Delete file |
 | erode self | `erode self N` | Remove N lines from own Μ |
@@ -760,6 +771,90 @@ Every command, its syntax, and what it does underneath.
 
 ---
 
+## Background Daemons
+
+Two processes run silently while you read:
+
+**The librarian** makes a round every five minutes. It counts all documents and compares to the previous count. It checks acquisitions/ for unsorted documents. It removes anything in ephemera/ older than one day. It writes a line in the journal. If the librarian stops, the library does not break — it drifts. The catalogue falls behind. Ephemera accumulates. The library becomes a pile of documents in a building.
+
+**The dreamer** wakes every hour. It reads random fragments from across the collection — a line from the welcome, a phrase from the letter, a sentence from the rules — and recombines them into a new document, inscribed in `west-wing/ephemera/`. The dream is a real document. You can read it, search for it, inspect it. But it lives in ephemera, which means it will expire when the librarian cleans up. The library dreams, and the dreams fade.
+
+Both daemons start when the library opens and stop when it closes.
+
+---
+
+## Embedded Programs
+
+ΦΜΛ programs can be hidden in the whitespace of any host document. The visible text says one thing. The invisible text does another.
+
+The encoding: each instruction byte is transmitted as 7 consecutive whitespace characters (space = 0, tab = 1), terminated by a newline. The program begins with an acquisition stamp — the sequence SP TAB SP TAB SP TAB LF.
+
+To run an embedded program:
+
+```bash
+oma --embedded path/to/document
+```
+
+To check whether a document contains an embedded program, use `inspect`. If the whitespace contains a valid acquisition stamp, the inspector will note: "contains a ΦΜΛ whitespace program."
+
+---
+
+## Classification
+
+Documents can be classified into three access levels:
+
+| Level | Meaning |
+|-------|---------|
+| `public` | Readable by any reader |
+| `restricted` | Readable but flagged as sensitive |
+| `classified` | Intended for archivist access only |
+
+```
+> as-archivist classify restricted the-letter
+    "the-letter" classified as restricted.
+```
+
+Classification is stored in `.meta/` alongside read counts. It is metadata — it does not change what the document says or does, only how it is described when inspected.
+
+---
+
+## Multi-Reader Sessions
+
+Multiple terminals can connect to the same library simultaneously. Each `oma` instance registers itself in `.sessions/` on boot.
+
+```
+> readers
+    2 readers present:
+
+      ned — arrived 2026-05-18 16:30:00
+      guest (you) — arrived 2026-05-18 17:15:00
+
+    You have read 4 documents this session.
+```
+
+The journal records all readers. Stale sessions — processes that crashed without shutting down — are cleaned up automatically when `readers` runs.
+
+---
+
+## Bootable Image
+
+ΦΜΛ can boot as the entire operating system on a Raspberry Pi:
+
+```bash
+make image
+```
+
+This produces an initramfs containing just the Linux kernel and `/bin/oma`. Flash it to an SD card, power on, and the library is the first thing that exists. No desktop. No login screen. 32MB total.
+
+```bash
+# Test with QEMU
+qemu-system-aarch64 -M virt -cpu cortex-a72 \
+  -kernel <your-kernel> -initrd build/initramfs.cpio.gz \
+  -append 'console=ttyAMA0' -nographic
+```
+
+---
+
 ## Glossary
 
 | In the library | In Unix | In philosophy |
@@ -776,6 +871,9 @@ Every command, its syntax, and what it does underneath.
 | Λ layer | Embedded script | Agency |
 | Μ layer | File content | Message |
 | Φ layer | Path + metadata | Form |
+| The Librarian | cron daemon | Custodian |
+| The Dreamer | generative process | Imagination |
+| Phantom entry | dangling pointer | Absent referent |
 | Ephemera | /tmp | The impermanent |
 | Acquisitions | ~/Downloads | The unclassified |
 | Read counter | Access time | Trace of attention |
