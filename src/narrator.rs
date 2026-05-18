@@ -7,10 +7,6 @@ pub fn say(text: &str) {
     }
 }
 
-pub fn say_raw(text: &str) {
-    println!("{text}");
-}
-
 pub fn blank() {
     println!();
 }
@@ -48,8 +44,4 @@ pub fn register_field(key: &str, value: &str) {
 
 pub fn error(text: &str) {
     println!("    {text}");
-}
-
-pub fn journal_entry(time: &str, text: &str) {
-    println!("    {time}  {text}");
 }

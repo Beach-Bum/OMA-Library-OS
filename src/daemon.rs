@@ -187,16 +187,13 @@ fn clean_ephemera(root: &Path) -> usize {
         if name.starts_with('.') {
             continue;
         }
-        if let Ok(meta) = entry.metadata() {
-            if let Ok(modified) = meta.modified() {
-                if let Ok(age) = now.duration_since(modified) {
-                    if age > one_day {
+        if let Ok(meta) = entry.metadata()
+            && let Ok(modified) = meta.modified()
+                && let Ok(age) = now.duration_since(modified)
+                    && age > one_day {
                         let _ = fs::remove_file(entry.path());
                         removed += 1;
                     }
-                }
-            }
-        }
     }
 
     removed

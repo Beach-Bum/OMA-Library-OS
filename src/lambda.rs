@@ -231,23 +231,9 @@ pub fn execute(
     true
 }
 
-/// Legacy execute interface (for backward compat)
-pub fn execute_simple(
-    script: &str,
-    root: &Path,
-    vars: &HashMap<String, String>,
-) -> bool {
-    let ctx = LambdaContext {
-        root: root.to_path_buf(),
-        doc_path: PathBuf::new(),
-        read_count_path: PathBuf::new(),
-    };
-    execute(script, &ctx, vars)
-}
-
 // ── Expression evaluation ────────────────────────────────────────────
 
-fn eval_expr(expr: &str, ctx: &LambdaContext, vars: &HashMap<String, String>) -> String {
+fn eval_expr(expr: &str, ctx: &LambdaContext, _vars: &HashMap<String, String>) -> String {
     if expr.starts_with("count ") {
         let path = expr.strip_prefix("count ").unwrap().trim();
         let path = path.trim_end_matches("/*");

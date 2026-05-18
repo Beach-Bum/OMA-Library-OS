@@ -4,7 +4,7 @@
 
 use std::fs;
 use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 /// Room descriptions — stored as .room-description files
 const ROOM_DESC_FILE: &str = ".room-description";
@@ -14,7 +14,6 @@ const META_SEPARATOR: &str = "\n--- Λ ---\n";
 
 pub struct Document {
     pub name: String,
-    pub path: PathBuf,
     pub mu: String,       // visible text (Μ)
     pub lambda: String,   // executable logic (Λ)
     pub is_process: bool,
@@ -36,7 +35,6 @@ impl Document {
 
         Some(Document {
             name,
-            path: path.to_path_buf(),
             mu,
             lambda,
             is_process,
@@ -171,9 +169,9 @@ fn search_recursive(
         let path = entry.path();
         if path.is_dir() {
             search_recursive(base, &path, query, results);
-        } else if let Ok(content) = fs::read_to_string(&path) {
-            if content.to_lowercase().contains(&query_lower)
-                || name.to_lowercase().contains(&query_lower)
+        } else if let Ok(content) = fs::read_to_string(&path)
+            && (content.to_lowercase().contains(&query_lower)
+                || name.to_lowercase().contains(&query_lower))
             {
                 let rel = path.strip_prefix(base).unwrap_or(&path);
                 let snippet = content
@@ -188,7 +186,6 @@ fn search_recursive(
                 };
                 results.push((rel.to_string_lossy().to_string(), snippet));
             }
-        }
     }
 }
 

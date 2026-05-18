@@ -44,13 +44,6 @@ impl StackItem {
             StackItem::Str(s) => s.parse().unwrap_or(0),
         }
     }
-
-    fn as_str(&self) -> String {
-        match self {
-            StackItem::Int(n) => n.to_string(),
-            StackItem::Str(s) => s.clone(),
-        }
-    }
 }
 
 // ── Grid Cell ───────────────────────────────────────────────────────
@@ -58,7 +51,6 @@ impl StackItem {
 #[derive(Debug, Clone)]
 struct Cell {
     op: char,
-    orig: char,
     frozen: bool,
     mutation_count: u32,
 }
@@ -225,16 +217,6 @@ impl GridState {
         }
 
         &self.exit_condition
-    }
-
-    fn cell(&self, x: usize, y: usize) -> &Cell {
-        &self.grid[y % self.height][x % self.width]
-    }
-
-    fn cell_mut(&mut self, x: usize, y: usize) -> &mut Cell {
-        let h = self.height;
-        let w = self.width;
-        &mut self.grid[y % h][x % w]
     }
 
     fn step(&mut self) {
@@ -520,7 +502,6 @@ fn parse_grid(source: &str) -> Vec<Vec<Cell>> {
         for ch in row_str.chars() {
             cells.push(Cell {
                 op: ch,
-                orig: ch,
                 frozen: false,
                 mutation_count: 0,
             });
@@ -534,11 +515,11 @@ fn parse_grid(source: &str) -> Vec<Vec<Cell>> {
 
     for row in &mut grid {
         while row.len() < width {
-            row.push(Cell { op: ' ', orig: ' ', frozen: false, mutation_count: 0 });
+            row.push(Cell { op: ' ', frozen: false, mutation_count: 0 });
         }
     }
     while grid.len() < height {
-        grid.push(vec![Cell { op: ' ', orig: ' ', frozen: false, mutation_count: 0 }; width]);
+        grid.push(vec![Cell { op: ' ', frozen: false, mutation_count: 0 }; width]);
     }
 
     grid
