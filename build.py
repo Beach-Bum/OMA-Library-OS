@@ -21,6 +21,7 @@ PAGES = [
     ("fundament", "The Fundament"),
     ("connecting", "Connecting Libraries"),
     ("commands", "Command Reference"),
+    ("impossible-things", "Impossible Things"),
 ]
 
 

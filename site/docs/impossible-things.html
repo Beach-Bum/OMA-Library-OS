@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Impossible Things — ΦΜΛ</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+  <div class="logo"><a href="/" style="text-decoration:none;color:inherit">ΦΜΛ</a></div>
+  <div class="subtitle">The Open Manual Archive</div>
+  <ul>
+<li><a href="/docs/">The Manual</a></li>
+<li><a href="/docs/quickstart.html">Getting Started</a></li>
+<li><a href="/docs/navigation.html">On Moving</a></li>
+<li><a href="/docs/reading.html">On Reading</a></li>
+<li><a href="/docs/registers.html">The Three Registers</a></li>
+<li><a href="/docs/writing.html">On Writing</a></li>
+<li><a href="/docs/lambda.html">The Λ Language</a></li>
+<li><a href="/docs/journal.html">The Journal</a></li>
+<li><a href="/docs/living-documents.html">Living Documents</a></li>
+<li><a href="/docs/fundament.html">The Fundament</a></li>
+<li><a href="/docs/connecting.html">Connecting Libraries</a></li>
+<li><a href="/docs/commands.html">Command Reference</a></li>
+<li><a href="/docs/impossible-things.html" class="active">Impossible Things</a></li>
+  </ul>
+</nav>
+<main>
+<h1>Impossible Things</h1>
+<p>These are things ΦΜΛ makes possible. Each one includes the commands or Λ code to build it yourself.</p>
+<h2>A document that destroys itself</h2>
+<p>The confession exists once. Read it and it&#x27;s gone. The catalogue still lists it. The shelves don&#x27;t have it.</p>
+<pre><code>
+&gt; inscribe east-wing/stacks/the-confession
+
+I have something to tell you, but I will only say it once.
+
+--- Λ ---
+set visits ← read-count
+if visits &gt; 1:
+  withdraw self
+  write west-wing/journal/{date} &quot;{time} The confession was read and withdrew itself.&quot;
+</code></pre>
+<p>After the first reading, it deletes its own file. The journal records that it existed. The catalogue will list it until the next index. A phantom — a record pointing to nothing.</p>
+<h2>A document that erodes</h2>
+<p>A story that loses a line each time it&#x27;s read. Twelve readings and only the title remains.</p>
+<pre><code>
+&gt; inscribe east-wing/stacks/the-erosion
+
+The sand came first to the lower shelves.
+Then the reading tables disappeared.
+The card catalogue filled with grit.
+The overhead lights flickered amber.
+Readers left their chairs one by one.
+The librarian swept, but the sand returned.
+The east wing door no longer closed.
+The west wing was already buried.
+Only the entrance hall remained.
+The desk was still clear.
+The welcome document still legible.
+Then the sand took that too.
+
+--- Λ ---
+set visits ← read-count
+if visits &gt; 1:
+  erode self 1
+  write west-wing/journal/{date} &quot;{time} The erosion lost another line. {12 - visits} remain.&quot;
+</code></pre>
+<p>The Λ layer continues to run after the text is gone. The logic outlives the words.</p>
+<h2>A document that writes documents</h2>
+<p>Read lesson-1 and lesson-2 appears on the shelf.</p>
+<pre><code>
+&gt; inscribe east-wing/stacks/lesson-1
+
+This is your first lesson: every document you read changes the library.
+Reading is not passive. To prove it, read this document and then browse.
+Something new will be on the shelf.
+
+--- Λ ---
+set visits ← read-count
+if visits == &quot;1&quot;:
+  inscribe east-wing/stacks/lesson-2
+    This is your second lesson: documents can create documents.
+    The curriculum writes itself as you study it.
+    What would lesson-3 teach? Inscribe it yourself.
+  write west-wing/journal/{date} &quot;{time} Lesson-1 created lesson-2.&quot;
+</code></pre>
+<p>The textbook authors its own next chapter. The student triggers the material by showing up.</p>
+<h2>A library that dreams</h2>
+<p>The dreamer reads random fragments from across the collection and inscribes new documents while you&#x27;re away.</p>
+<pre><code>
+&gt; inscribe east-wing/processes/the-dreamer
+
+The dreamer is sleeping. When it wakes, it reads
+fragments from the collection and writes something new
+in ephemera. Dreams fade — ephemera is temporary.
+
+--- Λ ---
+loop:
+  wait 3600s
+  frag1 ← random-line east-wing/stacks/*
+  frag2 ← random-line west-wing/correspondence/*
+  frag3 ← random-line east-wing/stacks/*
+  inscribe west-wing/ephemera/dream-{date}-{time}
+    {frag1}
+    {frag2}
+    {frag3}
+  write west-wing/journal/{date} &quot;{time} The dreamer dreamed.&quot;
+</code></pre>
+<p>Come back in the morning. Find texts that no one wrote. The librarian&#x27;s cleanup round will withdraw them from ephemera after one day.</p>
+<h2>A catalogue that lists itself</h2>
+<p>Russell&#x27;s paradox as a working feature.</p>
+<pre><code>
+&gt; read catalogue
+
+This document lists every document in the library,
+including itself.
+
+That sentence is the oldest problem in library science...
+
+The Collection (last indexed: 3 minutes ago)
+7 documents across 4 rooms.
+</code></pre>
+<p>The catalogue&#x27;s Λ layer regenerates the index every time you read it. But listing itself changes itself. The admission &quot;last indexed: 3 minutes ago&quot; is a philosophical position: all description lags behind the thing described.</p>
+<p>This one ships with the library. You don&#x27;t build it — you inherit it.</p>
+<h2>A book that&#x27;s different every time</h2>
+<p>The book of sand draws from the library itself. Same mechanism, different output every reading.</p>
+<pre><code>
+&gt; inscribe east-wing/stacks/my-book-of-sand
+
+This document has no fixed content.
+
+--- Λ ---
+set n ← read-count
+frag1 ← random-line east-wing/stacks/*
+frag2 ← random-line west-wing/correspondence/*
+frag3 ← random-line west-wing/journal/*
+
+say &quot;  {frag1}&quot;
+say &quot;  {frag2}&quot;
+say &quot;  {frag3}&quot;
+say &quot;&quot;
+say &quot;Reading number {n}. No two have been the same.&quot;
+</code></pre>
+<p>You can inspect the mechanism and see it&#x27;s trivial. The output still feels authored.</p>
+<h2>A document that knows you</h2>
+<p>The mirror letter tracks your visits and addresses you by name.</p>
+<pre><code>
+&gt; inscribe west-wing/correspondence/the-mirror-letter
+
+Dear reader,
+
+--- Λ ---
+set visits ← read-count
+if visits == &quot;1&quot;:
+  say &quot;This is the first time you&#x27;ve read this letter, {reader}.&quot;
+  say &quot;I will remember.&quot;
+if visits &gt; 1:
+  say &quot;Welcome back, {reader}. This is visit number {visits}.&quot;
+  say &quot;You first read this letter on {date}.&quot;
+write west-wing/journal/{date} &quot;{time} {reader} read the mirror letter (visit {visits}).&quot;
+</code></pre>
+<p>Over weeks, the journal fills with traces of your relationship with a text file.</p>
+<h2>A document hidden in whitespace</h2>
+<p>ΦΜΛ programs can be embedded in the whitespace of any host document. The visible text says one thing. The invisible text does another.</p>
+<p>To embed a program, encode each instruction as 7 whitespace characters (space = 0, tab = 1), terminated by a newline. Prefix the whole thing with the acquisition stamp: <code>SP TAB SP TAB SP TAB LF</code> (ASCII 42, the asterisk).</p>
+<pre><code>
+A perfectly ordinary document about gardening.
+
+The roses need pruning in March. The tomatoes
+go in after the last frost. Water deeply, not often.
+
+(This paragraph&#x27;s whitespace contains a ΦΜΛ program
+that writes &quot;hello&quot; to the journal. You cannot see it.
+The interpreter can.)
+</code></pre>
+<p>Every document is potentially two documents — the one you read and the one you can&#x27;t see. To check: <code>inspect</code> any document and the Λ layer will reveal whether whitespace contains embedded instructions.</p>
+<h2>Computation that eats itself</h2>
+<p>Every Λ operation on the full ΦΜΛ grid degrades the Φ structure that supports it. Each executed instruction mutates the cell it occupied.</p>
+<pre><code>
+&gt; inspect librarian
+
+Λ (Lambda)
+  [ΦΜΛ grid program — 24x16, degree 3, 4712 mutations]
+</code></pre>
+<p>The mutation count climbs with every execution cycle. Run a program long enough in a tight loop and it destroys itself from the inside, instruction by instruction, until only mutation residue remains. This is by design: computation is not free.</p>
+<p>The simple Λ instructions (<code>say</code>, <code>set</code>, <code>write</code>) are immune — they compile to grid operations but don&#x27;t expose the mutation. Grid programs are the deep end.</p>
+<h2>Consensus as a language primitive</h2>
+<p>In the full ΦΜΛ grid language, no operation executes without agreement from all three registers.</p>
+<pre><code>
+Φ proposes: move the instruction pointer north
+Μ proposes: move the instruction pointer north
+Λ proposes: move the instruction pointer east
+
+Result: SCHISM
+  Mediation initiated.
+  Finding aid updated: &quot;Λ dissented on navigation at cell (4,7), cycle 891.&quot;
+</code></pre>
+<p>Disagreement is not an error — it&#x27;s an information state. The finding aid records every dissent. Two-of-three majority carries after mediation. Persistent dissent triggers deadlock resolution.</p>
+<p>You encounter this only when writing full grid programs. The simple Λ language handles consensus automatically.</p>
+<h2>A journal that cannot be revised</h2>
+<p>The journal is append-only. Everything else can be changed, moved, withdrawn, eroded. The journal persists.</p>
+<pre><code>
+&gt; read west-wing/journal/2026-05-18
+
+06:00  The library opened.
+06:00  A reader arrived: ned
+06:01  The reader read &quot;welcome&quot;.
+06:04  The reader read &quot;the-garden-of-forking-paths&quot;.
+06:04  The reader reached the fork in the garden.
+06:12  The reader read &quot;the-confession&quot;.
+06:12  The confession was read and withdrew itself.
+06:12  The catalogue still lists it. The shelves do not.
+</code></pre>
+<p>Any Λ script can write to the journal:</p>
+<pre><code>
+write west-wing/journal/{date} &quot;{time} Something happened.&quot;
+</code></pre>
+<p>No Λ script can revise or withdraw it. The journal is the only document protected from the system&#x27;s own power. The most honest document in the library.</p>
+<h2>Rewrite the OS by editing documents</h2>
+<p>The library&#x27;s rules are a document. The librarian is a document. The welcome message is a document. Change any of them and the system changes.</p>
+<pre><code>
+&gt; as-archivist revise rules
+
+(the library&#x27;s rules open in your editor)
+(change the ephemera lifetime from 1 day to 1 week)
+(save and close)
+
+The rules have been revised.
+The librarian will enforce the new rules on the next round.
+</code></pre>
+<p>Restructure rooms:</p>
+<pre><code>
+&gt; open-room south-wing
+&gt; reshelve east-wing/stacks/the-erosion to south-wing/
+&gt; open-room south-wing/experiments
+</code></pre>
+<p>The system is its own source code. There is no configuration file. There are only documents.</p>
+<h2>Fork the library</h2>
+<p>Every library is a folder on a disk.</p>
+<pre><code>
+cp -r ~/oma-library ~/second-library
+OMA_ROOT=~/second-library oma
+</code></pre>
+<p>Two libraries. Same origin. Different futures. After a week, unrecognisable from each other.</p>
+<p>Share documents between them:</p>
+<pre><code>
+&gt; as-archivist
+&gt; annex /media/shared as other-libraries/friend
+&gt; transcribe west-wing/correspondence/hello to other-libraries/friend/acquisitions/
+</code></pre>
+<p>No server. No protocol. Just files on a shared surface. NFS, Syncthing, USB sticks — anything that moves folders.</p>
+<h2>The specification is its own program</h2>
+<p>The ΦΜΛ specification document (<code>SPEC.md</code>) contains a valid ΦΜΛ program embedded in its whitespace. The document that defines the language is simultaneously an executable in the language.</p>
+<p>To run it:</p>
+<pre><code>
+oma --embedded SPEC.md
+</code></pre>
+<p>Self-hosting at the specification level. The map contains the territory.</p>
+<h2>Three phantom documents</h2>
+<p>The catalogue has entries for three documents that don&#x27;t exist on any shelf. The previous archivist searched every room.</p>
+<pre><code>
+&gt; search phantom
+    3 results:
+      (location unknown) — no file found
+      (location unknown) — no file found
+      (location unknown) — no file found
+</code></pre>
+<p>They&#x27;re in the index. They&#x27;re not in the building. Is it a bug? Is it a feature? The archivist couldn&#x27;t tell. Neither can you.</p>
+<p>You could <code>inscribe</code> documents with those names and the phantom entries would resolve. Or you could leave them. The library is slightly larger than it should be. Some of the shelves go back further than the walls.</p>
+<h2>32MB, boots in two seconds</h2>
+<p>Flash a Buildroot image to an SD card. Insert into a Raspberry Pi. Power on.</p>
+<pre><code>
+# Build the image
+cd phi-mu-lambda
+make image    # requires Buildroot toolchain
+
+# Flash
+dd if=build/oma.img of=/dev/sdX bs=4M status=progress
+
+# Or cross-compile just the binary
+rustup target add aarch64-unknown-linux-musl
+cargo build --release --target aarch64-unknown-linux-musl
+scp target/aarch64-unknown-linux-musl/release/oma pi@raspberrypi:~/
+</code></pre>
+<p>No desktop. No login screen. Linux kernel + <code>/bin/oma</code> + the founding collection. The library is the computer. The computer is the library.</p>
+<div class="doc-footer">
+  <a href="/">ΦΜΛ</a> &middot; <a href="https://github.com/Beach-Bum/phi-mu-lambda">Source</a>
+</div>
+</main>
+</div>
+</body>
+</html>
