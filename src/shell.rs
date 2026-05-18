@@ -145,27 +145,20 @@ impl ShellState {
             }
             "lobby" | "home" | "~" => self.root.clone(),
             _ => {
-                // Strip "to " prefix if present
                 let target = args.strip_prefix("to ").unwrap_or(args);
-                let path = self.cwd.join(target);
-                if !path.exists() {
-                    // Try from root
-                    let from_root = self.root.join(target);
-                    if from_root.exists() && from_root.is_dir() {
-                        from_root
-                    } else {
-                        narrator::error(&format!(
-                            "There is no room called \"{target}\" here."
-                        ));
-                        return;
-                    }
-                } else if !path.is_dir() {
+                if let Some(path) = self.resolve_room(target) {
+                    path
+                } else if self.resolve_document(target).is_some() {
                     narrator::error(&format!(
                         "\"{target}\" is a document, not a room. Try: read {target}"
                     ));
                     return;
                 } else {
-                    path
+                    narrator::error(&format!(
+                        "There is no room called \"{target}\" here."
+                    ));
+                    narrator::error("Try: browse (to see what's nearby)");
+                    return;
                 }
             }
         };
@@ -200,26 +193,51 @@ impl ShellState {
     // ── Reading ──────────────────────────────────────────────────────
 
     fn cmd_browse(&self, args: &str) {
-        let target = if args.is_empty() || args == "-quietly" {
-            &self.cwd
+        let quiet = args == "-quietly";
+        let target_arg = if quiet { "" } else { args };
+
+        let target = if target_arg.is_empty() {
+            self.cwd.clone()
+        } else if let Some(path) = self.resolve_room(target_arg) {
+            path
         } else {
-            &self.cwd.join(args)
+            // Maybe they meant a document
+            if self.resolve_document(target_arg).is_some() {
+                narrator::error(&format!("\"{target_arg}\" is a document. Try: read {target_arg}"));
+                return;
+            }
+            narrator::error(&format!("There is no room called \"{target_arg}\" here."));
+            return;
         };
 
-        let entries = library::browse(target);
+        let entries = library::browse(&target);
         if entries.is_empty() {
             narrator::say("The shelves here are empty.");
             return;
         }
 
-        let quiet = args == "-quietly";
         narrator::blank();
+
         for entry in &entries {
             if quiet {
                 let suffix = if entry.is_dir { "/" } else { "" };
                 println!("      {}{suffix}", entry.name);
+            } else if entry.is_dir {
+                // Show the room AND its contents (one level deep)
+                narrator::shelf_entry(&entry.name, &entry.description, true);
+                let sub_entries = library::browse(&target.join(&entry.name));
+                for sub in &sub_entries {
+                    if sub.name.starts_with('.') {
+                        continue;
+                    }
+                    let prefix = format!("  {}/{}", entry.name, sub.name);
+                    let suffix = if sub.is_dir { "/" } else { "" };
+                    let dots = 38_usize.saturating_sub(prefix.len() + suffix.len());
+                    let padding: String = std::iter::repeat_n('.', dots.max(2)).collect();
+                    println!("        {prefix}{suffix} {padding} {}", sub.description);
+                }
             } else {
-                narrator::shelf_entry(&entry.name, &entry.description, entry.is_dir);
+                narrator::shelf_entry(&entry.name, &entry.description, false);
             }
         }
     }
@@ -750,16 +768,94 @@ impl ShellState {
 
     // ── Helpers ──────────────────────────────────────────────────────
 
-    fn resolve_document(&self, name: &str) -> Option<PathBuf> {
-        // Try in current directory
-        let path = self.cwd.join(name);
-        if path.is_file() {
-            return Some(path);
+    /// Resolve a name to a path. Handles:
+    ///   "east wing" → "east-wing"
+    ///   "the letter" → "the-letter"
+    ///   "garden" → "the-garden-of-forking-paths" (partial match)
+    ///   "east-wing/stacks/garden" → partial match within path
+    fn resolve_path(&self, name: &str) -> Option<PathBuf> {
+        let name = name.trim();
+
+        // Direct match (exact path)
+        for base in [&self.cwd, &self.root] {
+            let path = base.join(name);
+            if path.exists() {
+                return Some(path);
+            }
         }
-        // Try from root
-        let path = self.root.join(name);
-        if path.is_file() {
-            return Some(path);
+
+        // Replace spaces with hyphens: "east wing" → "east-wing"
+        let hyphenated = name.replace(' ', "-");
+        for base in [&self.cwd, &self.root] {
+            let path = base.join(&hyphenated);
+            if path.exists() {
+                return Some(path);
+            }
+        }
+
+        // Partial match: "garden" matches "the-garden-of-forking-paths"
+        // Search in cwd, then root, then recursively
+        if let Some(found) = self.fuzzy_find(name) {
+            return Some(found);
+        }
+
+        None
+    }
+
+    fn resolve_document(&self, name: &str) -> Option<PathBuf> {
+        self.resolve_path(name).filter(|p| p.is_file())
+    }
+
+    fn resolve_room(&self, name: &str) -> Option<PathBuf> {
+        self.resolve_path(name).filter(|p| p.is_dir())
+    }
+
+    /// Fuzzy find: search for partial name matches in cwd, root, then recursively
+    fn fuzzy_find(&self, name: &str) -> Option<PathBuf> {
+        let needle = name.to_lowercase().replace(' ', "-");
+
+        // Search in cwd first
+        if let Some(found) = self.fuzzy_find_in(&self.cwd, &needle) {
+            return Some(found);
+        }
+
+        // Then root
+        if self.cwd != self.root {
+            if let Some(found) = self.fuzzy_find_in(&self.root, &needle) {
+                return Some(found);
+            }
+        }
+
+        // Then recursively from root
+        self.fuzzy_find_recursive(&self.root, &needle)
+    }
+
+    fn fuzzy_find_in(&self, dir: &Path, needle: &str) -> Option<PathBuf> {
+        let entries = fs::read_dir(dir).ok()?;
+        for entry in entries.flatten() {
+            let fname = entry.file_name().to_string_lossy().to_lowercase();
+            if fname == *needle || fname.contains(needle) {
+                return Some(entry.path());
+            }
+        }
+        None
+    }
+
+    fn fuzzy_find_recursive(&self, dir: &Path, needle: &str) -> Option<PathBuf> {
+        let entries = fs::read_dir(dir).ok()?;
+        for entry in entries.flatten() {
+            let fname = entry.file_name().to_string_lossy().to_lowercase();
+            if fname.starts_with('.') {
+                continue;
+            }
+            if fname == *needle || fname.contains(needle) {
+                return Some(entry.path());
+            }
+            if entry.path().is_dir() {
+                if let Some(found) = self.fuzzy_find_recursive(&entry.path(), needle) {
+                    return Some(found);
+                }
+            }
         }
         None
     }
