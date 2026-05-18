@@ -17,6 +17,7 @@ pub struct ShellState {
     pub boot_time: chrono::DateTime<chrono::Local>,
     pub documents_read: usize,
     pub is_archivist: bool,
+    pub annexed: HashMap<String, PathBuf>,
 }
 
 impl ShellState {
@@ -29,6 +30,7 @@ impl ShellState {
             boot_time: chrono::Local::now(),
             documents_read: 0,
             is_archivist: false,
+            annexed: HashMap::new(),
         }
     }
 
@@ -200,6 +202,9 @@ impl ShellState {
             "catalogue" => self.cmd_catalogue(),
             "ledger" => self.cmd_ledger(),
             "turn-page" => self.cmd_turn_page(),
+            "annex" => self.cmd_annex(args, elevated),
+            "seal" => self.cmd_seal(args, elevated),
+            "classify" => self.cmd_classify(args, elevated),
             "leave" | "exit" | "quit" => return false,
             "help" | "what" | "how" | "?" => self.cmd_help(),
             "where" | "whereami" => self.cmd_where(),
@@ -741,8 +746,55 @@ impl ShellState {
         }
     }
 
-    fn cmd_catalogue(&mut self) {
-        self.cmd_read("catalogue");
+    fn cmd_catalogue(&self) {
+        narrator::blank();
+        narrator::say("This document lists every document in the library, including itself.");
+        narrator::say("");
+        narrator::say("The Collection:");
+        narrator::blank();
+        let mut count = 0;
+        let mut rooms = 0;
+        self.catalogue_walk(&self.root, &self.root, &mut count, &mut rooms);
+        narrator::blank();
+        narrator::say(&format!("{count} documents across {rooms} rooms."));
+
+        // Show phantom entries
+        narrator::blank();
+        narrator::say("The following entries have no corresponding document:");
+        narrator::blank();
+        for name in &["the-unwritten", "the-remembered", "the-awaited"] {
+            narrator::say(&format!("  {name} .............. (location unknown)"));
+        }
+    }
+
+    fn catalogue_walk(&self, dir: &Path, root: &Path, count: &mut usize, rooms: &mut usize) {
+        let Ok(entries) = fs::read_dir(dir) else { return };
+        let mut sorted: Vec<_> = entries.flatten().collect();
+        sorted.sort_by_key(|e| e.file_name());
+        for entry in sorted {
+            let name = entry.file_name().to_string_lossy().to_string();
+            if name.starts_with('.') { continue; }
+            let path = entry.path();
+            if path.is_dir() {
+                *rooms += 1;
+                self.catalogue_walk(&path, root, count, rooms);
+            } else {
+                *count += 1;
+                let rel = path.strip_prefix(root).unwrap_or(&path);
+                let display = rel.to_string_lossy();
+                // First line as description
+                let desc = fs::read_to_string(&path)
+                    .ok()
+                    .and_then(|c| c.lines().next().map(|l| {
+                        let l = l.trim();
+                        if l.len() > 50 { format!("{}...", &l[..47]) } else { l.to_string() }
+                    }))
+                    .unwrap_or_default();
+                let dots = 45_usize.saturating_sub(display.len());
+                let padding: String = std::iter::repeat_n('.', dots.max(2)).collect();
+                narrator::say(&format!("  {display} {padding} {desc}"));
+            }
+        }
     }
 
     // ── System ───────────────────────────────────────────────────────
@@ -859,11 +911,115 @@ impl ShellState {
         narrator::say("    search library      search all documents");
         narrator::say("    catalogue           view the master index");
         narrator::blank();
+        narrator::say("  Connect");
+        narrator::say("    annex /path as name attach external storage");
+        narrator::say("    seal name           detach external storage");
+        narrator::say("    classify level doc  set access level (public/restricted/classified)");
+        narrator::blank();
         narrator::say("  Other");
         narrator::say("    ledger              everything you've done today");
         narrator::say("    turn-page           clear the screen");
         narrator::say("    as-archivist        unlock restricted areas");
         narrator::say("    leave               the lights go out");
+    }
+
+    // ── Connecting ────────────────────────────────────────────────────
+
+    fn cmd_annex(&mut self, args: &str, elevated: bool) {
+        if !elevated {
+            narrator::error("Only the Head Archivist may annex external storage.");
+            narrator::error("Try: as-archivist annex /path as name");
+            return;
+        }
+        // annex /path as name
+        let Some((source, name)) = args.split_once(" as ") else {
+            narrator::error("Usage: annex /path/to/storage as wing-name");
+            return;
+        };
+        let source = source.trim();
+        let name = name.trim();
+        let source_path = PathBuf::from(source);
+        if !source_path.exists() || !source_path.is_dir() {
+            narrator::error(&format!("\"{source}\" does not exist or is not a directory."));
+            return;
+        }
+        let link_path = self.root.join("other-libraries").join(name);
+        #[cfg(unix)]
+        {
+            let _ = std::os::unix::fs::symlink(&source_path, &link_path);
+        }
+        #[cfg(not(unix))]
+        {
+            let _ = fs::create_dir_all(&link_path);
+            narrator::error("Symlinks not supported on this platform. Created empty room instead.");
+            return;
+        }
+        self.annexed.insert(name.to_string(), source_path.clone());
+        narrator::say(&format!("External storage annexed as other-libraries/{name}."));
+        narrator::say(&format!("Source: {source}"));
+        library::journal_write(
+            &self.root,
+            &format!("The archivist annexed external storage as \"{}\".", name),
+        );
+    }
+
+    fn cmd_seal(&mut self, args: &str, elevated: bool) {
+        if !elevated {
+            narrator::error("Only the Head Archivist may seal storage.");
+            return;
+        }
+        let name = args.trim();
+        if name.is_empty() {
+            narrator::error("Seal what? Usage: seal wing-name");
+            return;
+        }
+        let link_path = self.root.join("other-libraries").join(name);
+        if link_path.exists() {
+            let _ = fs::remove_file(&link_path); // remove symlink
+            let _ = fs::remove_dir(&link_path);  // or empty dir
+            self.annexed.remove(name);
+            narrator::say(&format!("other-libraries/{name} has been sealed."));
+            library::journal_write(
+                &self.root,
+                &format!("The archivist sealed \"{}\".", name),
+            );
+        } else {
+            narrator::error(&format!("There is no annexed storage called \"{name}\"."));
+        }
+    }
+
+    fn cmd_classify(&self, args: &str, elevated: bool) {
+        if !elevated {
+            narrator::error("Only the Head Archivist may classify documents.");
+            narrator::error("Try: as-archivist classify restricted document-name");
+            return;
+        }
+        // classify LEVEL DOCUMENT
+        let Some((level, doc_name)) = args.split_once(' ') else {
+            narrator::error("Usage: classify [public|restricted|classified] document-name");
+            return;
+        };
+        let level = level.trim();
+        if !matches!(level, "public" | "restricted" | "classified") {
+            narrator::error("Classification levels: public, restricted, classified");
+            return;
+        }
+        let Some(path) = self.resolve_document(doc_name.trim()) else {
+            narrator::error(&format!("Cannot find \"{}\".", doc_name.trim()));
+            return;
+        };
+        // Store classification in .meta
+        let rel = path.strip_prefix(&self.root).unwrap_or(&path);
+        let meta_path = self.root.join(".meta").join(
+            rel.to_string_lossy().replace('/', "_") + ".classification"
+        );
+        let _ = fs::create_dir_all(self.root.join(".meta"));
+        let _ = fs::write(&meta_path, level);
+        narrator::say(&format!("\"{}\" classified as {level}.", doc_name.trim()));
+        library::journal_write(
+            &self.root,
+            &format!("The archivist classified \"{}\" as {}.", doc_name.trim(), level),
+        );
     }
 
     // ── Helpers ──────────────────────────────────────────────────────

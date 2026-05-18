@@ -181,6 +181,46 @@ pub fn execute(
                 mutate_document(&ctx.doc_path, &old, &new);
             }
 
+        } else if line.starts_with("loop while ") && line.ends_with(':') {
+            // loop while condition:
+            let condition = line.strip_prefix("loop while ").unwrap()
+                .strip_suffix(':').unwrap().trim().to_string();
+            let mut body = Vec::new();
+            while i < lines.len() {
+                let next = lines[i];
+                if next.starts_with("  ") || next.starts_with("\t") {
+                    body.push(next.trim());
+                    i += 1;
+                } else {
+                    break;
+                }
+            }
+            let body_script = body.join("\n");
+            let mut iterations = 0;
+            while eval_condition(&condition, &local_vars) && iterations < 10000 {
+                execute(&body_script, ctx, &local_vars);
+                iterations += 1;
+            }
+
+        } else if line == "loop:" {
+            // Infinite loop (max 10000 iterations for safety)
+            let mut body = Vec::new();
+            while i < lines.len() {
+                let next = lines[i];
+                if next.starts_with("  ") || next.starts_with("\t") {
+                    body.push(next.trim());
+                    i += 1;
+                } else {
+                    break;
+                }
+            }
+            let body_script = body.join("\n");
+            let mut iterations = 0;
+            while iterations < 10000 {
+                execute(&body_script, ctx, &local_vars);
+                iterations += 1;
+            }
+
         } else if line.starts_with("wait ") {
             let rest = line.strip_prefix("wait ").unwrap().trim();
             let secs: f64 = rest.trim_end_matches('s').parse().unwrap_or(1.0);
@@ -334,7 +374,7 @@ fn random_line_from(path: &Path) -> Option<String> {
         .filter(|l| !l.trim().is_empty())
         .collect();
     if lines.is_empty() { return None; }
-    let idx = simple_random() % lines.len();
+    let idx = random_usize() % lines.len();
     Some(lines[idx].to_string())
 }
 
@@ -345,7 +385,7 @@ fn random_file_in(dir: &Path) -> Option<String> {
         .map(|e| e.file_name().to_string_lossy().to_string())
         .collect();
     if entries.is_empty() { return None; }
-    let idx = simple_random() % entries.len();
+    let idx = random_usize() % entries.len();
     Some(entries[idx].clone())
 }
 
@@ -375,12 +415,25 @@ fn parse_two_quoted(s: &str) -> Option<(String, String)> {
     }
 }
 
-/// Simple deterministic-ish random using time
-fn simple_random() -> usize {
+/// Xorshift64 PRNG seeded from time + thread ID for decent randomness
+fn random_usize() -> usize {
     use std::time::SystemTime;
-    let nanos = SystemTime::now()
-        .duration_since(SystemTime::UNIX_EPOCH)
-        .unwrap_or_default()
-        .subsec_nanos();
-    nanos as usize
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static STATE: AtomicU64 = AtomicU64::new(0);
+
+    let mut s = STATE.load(Ordering::Relaxed);
+    if s == 0 {
+        let nanos = SystemTime::now()
+            .duration_since(SystemTime::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_nanos() as u64;
+        s = nanos ^ 0x517cc1b727220a95;
+        if s == 0 { s = 1; }
+    }
+    // xorshift64
+    s ^= s << 13;
+    s ^= s >> 7;
+    s ^= s << 17;
+    STATE.store(s, Ordering::Relaxed);
+    s as usize
 }

@@ -462,7 +462,16 @@ if visits == "1":
 write west-wing/journal/{date} "{time} A reader completed Lesson 1."
 "#).unwrap();
 
+    // === PHANTOM DOCUMENTS ===
+    // Three catalogue entries that point to nothing.
+    // The catalogue's live index will show these as unresolved.
+    let phantom_dir = root.join(".phantoms");
+    let _ = fs::create_dir_all(&phantom_dir);
+    fs::write(phantom_dir.join("the-unwritten"), "A document that was never inscribed but appears in the index.").unwrap();
+    fs::write(phantom_dir.join("the-remembered"), "A document that was withdrawn but the catalogue retained its entry.").unwrap();
+    fs::write(phantom_dir.join("the-awaited"), "A document that does not yet exist but has been referenced.").unwrap();
+
     eprintln!("The shelves are stocked. The catalogue is ready.");
-    eprintln!("The founding collection: 12 documents and one set of rules.");
+    eprintln!("The founding collection: 12 documents, one set of rules, and three phantom entries.");
     eprintln!();
 }
