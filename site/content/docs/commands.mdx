@@ -1,0 +1,87 @@
+---
+title: Command Reference
+description: Every command, its syntax, and its Unix equivalent.
+---
+
+## Navigation
+
+| Command | Syntax | Unix |
+|---------|--------|------|
+| walk | `walk <room>` | `cd` |
+| walk back | `walk back` | `cd ..` |
+| walk lobby | `walk lobby` | `cd ~` |
+| where | `where` | `pwd` |
+
+## Reading
+
+| Command | Syntax | Unix |
+|---------|--------|------|
+| read | `read <doc>` | `cat` |
+| glance | `glance at <doc>` | `head -5` |
+| peek | `peek at <doc>` | `tail -5` |
+| inspect | `inspect <doc>` | `stat + cat` |
+| browse | `browse [room]` | `ls -la` |
+
+## Writing
+
+| Command | Syntax | Unix |
+|---------|--------|------|
+| inscribe | `inscribe <path>` | `cat >` |
+| revise | `revise <doc>` | `$EDITOR` |
+| say | `say <text>` | `echo` |
+| say into | `say X into file` | `echo >` |
+| say onto | `say X onto file` | `echo >>` |
+
+## Organisation
+
+| Command | Syntax | Unix |
+|---------|--------|------|
+| transcribe | `transcribe A to B` | `cp` |
+| reshelve | `reshelve A to B` | `mv` |
+| withdraw | `withdraw <doc>` | `rm` |
+| open-room | `open-room <name>` | `mkdir` |
+| close-room | `close-room <name>` | `rmdir` |
+
+## Search
+
+| Command | Syntax | Unix |
+|---------|--------|------|
+| search | `search <query>` | `grep -ri` |
+| scan | `scan <phrase>` | `grep -r` |
+| catalogue | `catalogue` | `locate` |
+
+## System
+
+| Command | Syntax | Unix |
+|---------|--------|------|
+| readers | `readers` | `who` |
+| activity | `activity` | `uptime` |
+| inventory | `inventory` | `df -h` |
+| ledger | `ledger` | `history` |
+| turn-page | `turn-page` | `clear` |
+| as-archivist | `as-archivist` | `sudo` |
+| annex | `annex <dev> as <name>` | `mount` |
+| seal | `seal <name>` | `umount` |
+| leave | `leave` | `exit` |
+| help | `help` / `?` | `man` |
+
+## Operators
+
+| Operator | Syntax | Unix |
+|----------|--------|------|
+| then | `cmd1 then cmd2` | `\|` |
+| into | `say X into file` | `>` |
+| onto | `say X onto file` | `>>` |
+
+## Glossary
+
+| In the library | In Unix | In philosophy |
+|----------------|---------|---------------|
+| Document | File | Record |
+| Room | Directory | Category |
+| The Fundament | Kernel | Substrate |
+| The Journal | syslog | Finding aid |
+| The Archivist | root | Authority |
+| Λ layer | Script | Agency |
+| Μ layer | Content | Message |
+| Φ layer | Metadata | Form |

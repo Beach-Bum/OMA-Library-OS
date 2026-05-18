@@ -1,0 +1,46 @@
+---
+title: The Three Registers
+description: Φ (Form), Μ (Message), Λ (Lambda) — every document, always.
+---
+
+Every document has three layers.
+
+**Φ (Form)** — where it is. Its room, its shelf, its classification. Structure.
+
+**Μ (Message)** — what it says. The words. Content.
+
+**Λ (Lambda)** — what it does. Logic that runs when read. Action.
+
+To see all three:
+
+```
+> inspect the erosion
+
+    Φ (Form)
+      Location: east-wing/stacks/the-erosion
+      Classification: process, living document
+      Size: 847 bytes
+
+    Μ (Message)
+      Content: "This story loses a line each time..."
+
+    Λ (Lambda)
+      set visits ← read-count
+      if visits > 1:
+        erode self 1
+```
+
+Not every document has all three. A letter has Φ and Μ but no Λ — it sits on a shelf and says something but does nothing. A blank page has only Φ — a place with nothing to say. The richest documents have all three and are, in a sense, alive.
+
+## File format
+
+A document is a plain text file. The Λ layer is separated by `--- Λ ---`:
+
+```
+This is the visible text (Μ layer).
+
+--- Λ ---
+say "This runs when the document is read."
+```
+
+Documents without the separator have no Λ layer. They are still.
