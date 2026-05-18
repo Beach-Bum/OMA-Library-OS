@@ -637,4 +637,4 @@ The initiate who has completed all three stages can navigate any library. Includ
 
 *This document synthesizes library science, cryptology, literary theory, hacker culture, cartographic philosophy, and anarchist theory as raw material for a manuscript. All connections drawn are genuine — the domains share structural isomorphisms that a novel could make explicit and inhabited.*
 
-*Research compiled by Case (Claude Code) for Ned Karlovich, 17 May 2026.*
+*Research compiled May 2026.*

@@ -601,8 +601,8 @@ The library was designed to be rebuilt from the inside. The archivist's letter s
 ### Build
 
 ```bash
-git clone https://github.com/Beach-Bum/phi-mu-lambda.git
-cd phi-mu-lambda
+git clone https://github.com/Beach-Bum/oma.git
+cd oma
 cargo build --release
 cp target/release/oma ~/.local/bin/
 ```
