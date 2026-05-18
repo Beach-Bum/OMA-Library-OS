@@ -25,8 +25,18 @@ install: build
 	@echo "Installed to $(INSTALL_DIR)/oma"
 
 cross-pi:
-	rustup target add aarch64-unknown-linux-musl 2>/dev/null || true
-	cargo build --release --target aarch64-unknown-linux-musl
+	@if command -v rustup >/dev/null 2>&1; then \
+		rustup target add aarch64-unknown-linux-musl; \
+	else \
+		echo "rustup not found — assuming aarch64-unknown-linux-musl is already available."; \
+	fi
+	@cargo build --release --target aarch64-unknown-linux-musl || { \
+		echo ""; \
+		echo "Cross-compile failed: the aarch64-unknown-linux-musl target std is missing."; \
+		echo "  with rustup:  rustup target add aarch64-unknown-linux-musl"; \
+		echo "  with Nix:     use a rust toolchain / pkgsCross that provides the musl target"; \
+		exit 1; \
+	}
 	@echo "Built: $(PI_BINARY)"
 
 image: cross-pi

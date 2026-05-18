@@ -257,7 +257,7 @@ impl ShellState {
         };
 
         // Check basement access
-        if target.starts_with(&self.root.join("basement")) && !self.is_archivist {
+        if target.starts_with(self.root.join("basement")) && !self.is_archivist {
             narrator::say("The basement door is locked.");
             narrator::say("Only the Head Archivist may enter. Try: as-archivist walk basement");
             return;
@@ -463,11 +463,10 @@ impl ShellState {
         }
 
         // Check for embedded whitespace program
-        if let Ok(content) = fs::read_to_string(&path) {
-            if crate::embedded::has_embedded(&content) {
+        if let Ok(content) = fs::read_to_string(&path)
+            && crate::embedded::has_embedded(&content) {
                 narrator::register_field("Embedded", "contains a ΦΜΛ whitespace program");
             }
-        }
 
         narrator::blank();
         narrator::register_header("Μ", "Message");
@@ -1122,11 +1121,10 @@ impl ShellState {
         }
 
         // Then root
-        if self.cwd != self.root {
-            if let Some(found) = self.fuzzy_find_in(&self.root, &needle) {
+        if self.cwd != self.root
+            && let Some(found) = self.fuzzy_find_in(&self.root, &needle) {
                 return Some(found);
             }
-        }
 
         // Then recursively from root
         self.fuzzy_find_recursive(&self.root, &needle)
@@ -1153,11 +1151,10 @@ impl ShellState {
             if fname == *needle || fname.contains(needle) {
                 return Some(entry.path());
             }
-            if entry.path().is_dir() {
-                if let Some(found) = self.fuzzy_find_recursive(&entry.path(), needle) {
+            if entry.path().is_dir()
+                && let Some(found) = self.fuzzy_find_recursive(&entry.path(), needle) {
                     return Some(found);
                 }
-            }
         }
         None
     }
