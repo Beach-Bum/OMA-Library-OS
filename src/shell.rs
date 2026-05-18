@@ -363,7 +363,10 @@ impl ShellState {
         if !doc.lambda.is_empty() {
             let mut vars = self.make_vars();
             vars.insert("document".into(), doc.name.clone());
-            lambda::execute(&doc.lambda, &self.root, &vars);
+            let ctx = lambda::LambdaContext::new(&self.root, &path);
+            let count = ctx.increment_read_count();
+            vars.insert("read-count".into(), count.to_string());
+            lambda::execute(&doc.lambda, &ctx, &vars);
         }
     }
 
