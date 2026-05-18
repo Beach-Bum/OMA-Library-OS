@@ -231,34 +231,6 @@ letter to the next reader. The library is not complete until you add to
 it. It was never meant to be complete without you.
 "#).unwrap();
 
-    // 7. the book of sand
-    fs::write(root.join("east-wing/stacks/the-book-of-sand"), r#"This document has no fixed content.
-
-Each time you read it, it draws from the library itself. A sentence from
-the welcome. A fragment from the journal. A line from whatever you last
-inscribed. The words rearrange. The text is always coherent but never the
-same twice.
-
-The previous archivist called this "the book of sand" because, like its
-namesake, it has no first page and no last page. You cannot find the
-passage you read before. You cannot show someone else what you saw. The
-document is specific to this moment, this reader, this state of the
-library.
-
-If you inspect this document, the Λ layer is visible. You can see exactly
-how it works. There is no mystery in the mechanism. The mystery is in the
-output — how the same simple process, drawing from the same shelves,
-produces something that feels written for you, right now, on this reading.
-
---- Λ ---
-say "——— a reading ———"
-say ""
-say "The library contains these words, rearranged:"
-say "(This will be a generated passage in a future version.)"
-say ""
-say "No two readings have been the same."
-"#).unwrap();
-
     // A few extra seeds
 
     // The dormant process
@@ -364,8 +336,7 @@ write west-wing/journal/{date} "{time} The confession was read and withdrew itse
 write west-wing/journal/{date} "{time} The catalogue still lists it. The shelves do not."
 "#).unwrap();
 
-    // The book of sand (now with real generative text)
-    // (overwrite the simpler version from above)
+    // The book of sand — generative; draws from the library on each read.
     fs::write(root.join("east-wing/stacks/the-book-of-sand"), r#"This document has no fixed content.
 
 Each time you read it, it draws from the library itself — a line
@@ -462,6 +433,130 @@ if visits == "1":
 write west-wing/journal/{date} "{time} A reader completed Lesson 1."
 "#).unwrap();
 
+    // === EMPTY-ROOM NOTES ===
+    // Every room that the founding collection leaves empty still gets one
+    // caretaker note: it explains, in voice, why the room is bare and points
+    // to the command that room exists for. No room is a dead end.
+
+    fs::write(root.join("acquisitions/the-empty-cart"), r#"This room is empty because you have not yet brought anything into it.
+
+Acquisitions is where new documents arrive before they are sorted.
+Nothing has been acquired. That is not a failure of the library —
+it is an invitation.
+
+To place a document of your own here, say:  inscribe <name>
+
+What you write will outlast both of us. Choose the first thing
+carefully, or carelessly. The library does not mind. It only keeps.
+"#).unwrap();
+
+    fs::write(root.join("basement/vault/the-seal"), r#"You are standing at the vault. The shelves appear empty.
+
+They are not empty. They are sealed. The archivist's private
+collection is here, but it does not show itself to ordinary readers.
+Access is a matter of classification, not curiosity.
+
+To see what your hands are permitted, say:  classify
+To bind a document so others cannot read it, say:  seal <name>
+
+Some things are kept by being hidden. Some readers are kept out
+so that the documents can be kept at all.
+"#).unwrap();
+
+    fs::write(root.join("other-libraries/the-corridor"), r#"There is nothing on these shelves because the shelves are not the point.
+
+This room is a corridor, not a collection. It is where other
+libraries attach themselves to this one — borrowed wings, external
+stacks, rooms that live on other disks.
+
+To graft an outside collection onto the library here, say:
+  annex <path>
+
+Until then the corridor stays bare. A door is still a door
+even when nothing has come through it yet.
+"#).unwrap();
+
+    fs::write(root.join("east-wing/devices/the-fuse-box"), r#"The infrastructure of the building is documented elsewhere; this
+room holds the devices themselves, and you have installed none.
+
+A device is a document that does something when it is read. The
+library ships with none in this room. You make them.
+
+To write one, say:  inscribe <name>
+Then give it a Λ margin — the logic that runs when it is read.
+See east-wing/stacks/how-to-inscribe for the three things to know.
+"#).unwrap();
+
+    fs::write(root.join("east-wing/utilities/the-empty-toolbox"), r#"Tools for the working reader. The toolbox is empty because tools,
+here, are documents you write and keep close.
+
+A utility is a small process you return to: a counter, a finder,
+a thing that tidies. Nothing general-purpose has been left for you.
+The archivist's tools were personal. Yours should be too.
+
+To begin one, say:  inscribe <name>
+"#).unwrap();
+
+    fs::write(root.join("east-wing/networking/the-quiet-line"), r#"How this library connects to others. Right now, it does not.
+
+This room stays empty until you attach something to it. The
+library can graft external collections onto itself — other disks,
+other wings, other people's archives.
+
+To connect one, say:  annex <path>
+See also: other-libraries, the corridor this room opens onto.
+"#).unwrap();
+
+    fs::write(root.join("west-wing/drafts/the-unfinished"), r#"Work in progress. There is none, because you have not begun any.
+
+Drafts is where a document lives before it is sure of itself.
+Nothing here is permanent; nothing here is judged.
+
+To start something and leave it unfinished, say:  inscribe <name>
+You may return. Drafts are patient. So is the library.
+"#).unwrap();
+
+    fs::write(root.join("west-wing/ephemera/the-note-that-stays"), r#"Temporary documents. They will not last — that is what ephemera
+means, and that is why this room keeps emptying itself.
+
+The Dreamer leaves things here while you sleep. The Librarian
+clears them. If the room is empty, the Librarian has been by,
+or the Dreamer has not yet dreamt.
+
+To read the live one, try:  read east-wing/processes/the-dreamer
+Then come back later and see what it left.
+"#).unwrap();
+
+    fs::write(root.join("basement/fundament/the-bearing-wall"), r#"The building itself. Concrete and wiring. There is nothing to
+read here because this room is not made of documents — it is
+what the documents stand on.
+
+You are below the collection now. Be careful what you change.
+
+To look at how anything here works, say:  inspect <name>
+To go back up where the books are, say:  walk
+"#).unwrap();
+
+    fs::write(root.join("basement/blueprints/how-the-building-stands"), r#"How the building was designed. The blueprints were not left in
+this room; they are the room. Every wall is a decision.
+
+There is nothing on the shelves because the structure is the
+text. Read it by moving through it.
+
+To examine a part of it closely, say:  inspect <name>
+To read the rules the building obeys, say:  read rules
+"#).unwrap();
+
+    fs::write(root.join("reading-room/the-chair"), r#"Where readers sit. There is nothing on these shelves because you
+do not bring books here to shelve them — you bring them here to
+read them.
+
+Carry a document in by reading it from anywhere:  read <name>
+
+The room does not keep what you read. It only holds you while
+you do. When you leave, say:  walk
+"#).unwrap();
+
     // === PHANTOM DOCUMENTS ===
     // Three catalogue entries that point to nothing.
     // The catalogue's live index will show these as unresolved.
@@ -472,6 +567,6 @@ write west-wing/journal/{date} "{time} A reader completed Lesson 1."
     fs::write(phantom_dir.join("the-awaited"), "A document that does not yet exist but has been referenced.").unwrap();
 
     eprintln!("The shelves are stocked. The catalogue is ready.");
-    eprintln!("The founding collection: 12 documents, one set of rules, and three phantom entries.");
+    eprintln!("The founding collection: 12 documents, one set of rules, three phantom entries, and a note in every empty room.");
     eprintln!();
 }
