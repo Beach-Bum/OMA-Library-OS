@@ -444,8 +444,10 @@ impl GridState {
             }
         }
 
-        // Mutate the cell we just executed (if not frozen)
-        if op != ' ' && op != '"' {
+        // Mutate the cell we just executed (if not frozen). Empty cells are
+        // included, as in interpreter.py: `do_mutate` ages them and turns
+        // one into '?' on its 18th visit.
+        if op != '"' {
             self.do_mutate(x, y);
         }
     }
@@ -523,4 +525,33 @@ fn parse_grid(source: &str) -> Vec<Vec<Cell>> {
     }
 
     grid
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// An empty source is an 8x8 grid of spaces; the pointer circles row 0,
+    /// so cell (0,0) is visited on cycles 0, 8, 16, ... and its 18th visit
+    /// is cycle 136.
+    #[test]
+    fn an_empty_cell_becomes_a_fork_on_its_eighteenth_visit() {
+        let mut g = GridState::from_source("");
+        g.run(136);
+        assert_eq!(g.grid[0][0].op, ' ', "17 visits: still empty");
+        assert!(g.fa.mutations.is_empty());
+
+        g.run(137);
+        assert_eq!(g.grid[0][0].op, '?');
+        assert_eq!(g.grid[0][0].mutation_count, 1);
+        assert_eq!(g.fa.mutations.len(), 1);
+        assert_eq!(g.grid[0][1].op, ' ', "its neighbour has had 17");
+    }
+
+    #[test]
+    fn executed_instructions_still_mutate() {
+        let mut g = GridState::from_source(">");
+        g.run(1);
+        assert_eq!(g.grid[0][0].op, 'v');
+    }
 }
