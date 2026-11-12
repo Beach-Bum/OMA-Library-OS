@@ -855,7 +855,7 @@ impl ShellState {
         narrator::say(&format!("{count} reader{} present:", if count == 1 { "" } else { "s" }));
         narrator::blank();
         for (user, time, pid) in &sessions {
-            let is_me = *pid == std::process::id();
+            let is_me = *pid == crate::session::pid();
             let suffix = if is_me { " (you)" } else { "" };
             narrator::say(&format!("  {user}{suffix} — arrived {time}"));
         }

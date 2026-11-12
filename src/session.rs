@@ -7,12 +7,25 @@
 use std::fs;
 use std::path::Path;
 
+/// This process's id. A WebAssembly module in a browser has none, and asking
+/// the standard library for one panics there, so that build is always reader 1.
+pub fn pid() -> u32 {
+    #[cfg(not(target_family = "wasm"))]
+    {
+        std::process::id()
+    }
+    #[cfg(target_family = "wasm")]
+    {
+        1
+    }
+}
+
 /// Register a new session. Returns the session ID.
 pub fn register(root: &Path) -> String {
     let sessions_dir = root.join(".sessions");
     let _ = fs::create_dir_all(&sessions_dir);
 
-    let pid = std::process::id();
+    let pid = pid();
     let user = std::env::var("USER")
         .or_else(|_| std::env::var("LOGNAME"))
         .unwrap_or_else(|_| "unknown".into());
