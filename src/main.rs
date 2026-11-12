@@ -8,6 +8,7 @@
 //!   Μ — Mu — Message — what it says (visible text)
 //!   Λ — Lambda — Function  — what it does (executable logic)
 
+#[cfg_attr(target_family = "wasm", allow(dead_code))]
 mod daemon;
 mod embedded;
 mod founding;
@@ -54,10 +55,15 @@ fn main() {
     // Register this session
     let session_id = session::register(&library_root);
 
-    // Start background daemons
+    // Start background daemons. They are threads, and the browser build
+    // (WebAssembly, one thread) cannot start any: there the library is quiet
+    // between commands.
     let running = Arc::new(AtomicBool::new(true));
-    let librarian = daemon::start_librarian(library_root.clone(), Arc::clone(&running));
-    let dreamer = daemon::start_dreamer(library_root.clone(), Arc::clone(&running));
+    #[cfg(not(target_family = "wasm"))]
+    let daemons = (
+        daemon::start_librarian(library_root.clone(), Arc::clone(&running)),
+        daemon::start_dreamer(library_root.clone(), Arc::clone(&running)),
+    );
 
     let mut state = shell::ShellState::new(library_root.clone());
     state.boot();
@@ -88,8 +94,11 @@ fn main() {
 
     // Stop daemons
     running.store(false, Ordering::Relaxed);
-    let _ = librarian.join();
-    let _ = dreamer.join();
+    #[cfg(not(target_family = "wasm"))]
+    {
+        let _ = daemons.0.join();
+        let _ = daemons.1.join();
+    }
 
     // Unregister session
     session::unregister(&library_root, &session_id);

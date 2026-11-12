@@ -114,15 +114,13 @@ pub fn confine(root: &Path, rel: &str) -> Option<PathBuf> {
     }
 
     let full = root.join(named);
-    let real_root = fs::canonicalize(root).ok()?;
 
     // Walk up to the nearest thing that exists (the root itself at worst)
     // and ask where it really is.
     let mut probe = full.as_path();
     loop {
         if fs::symlink_metadata(probe).is_ok() {
-            let real = fs::canonicalize(probe).ok()?;
-            if !real.starts_with(&real_root) {
+            if !stays_inside(root, probe) {
                 return None;
             }
             break;
@@ -130,6 +128,40 @@ pub fn confine(root: &Path, rel: &str) -> Option<PathBuf> {
         probe = probe.parent()?;
     }
     Some(full)
+}
+
+/// Whether `existing`, a path under `root` that is known to exist, really is
+/// inside `root` once symlinks are followed.
+#[cfg(not(target_family = "wasm"))]
+fn stays_inside(root: &Path, existing: &Path) -> bool {
+    match (fs::canonicalize(root), fs::canonicalize(existing)) {
+        (Ok(real_root), Ok(real)) => real.starts_with(real_root),
+        _ => false,
+    }
+}
+
+/// The browser build. WASI has no `canonicalize`, so nothing can be resolved.
+/// The name is already plain (no `..`, no root), which leaves a symlink on
+/// the way as the only route out; any link between `existing` and `root`
+/// refuses the path. Stricter than the native rule, which allows a link
+/// that stays inside the library.
+#[cfg(target_family = "wasm")]
+fn stays_inside(root: &Path, existing: &Path) -> bool {
+    let mut at = existing;
+    loop {
+        match fs::symlink_metadata(at) {
+            Ok(meta) if meta.file_type().is_symlink() => return false,
+            Ok(_) => {}
+            Err(_) => return false,
+        }
+        if at == root {
+            return true;
+        }
+        match at.parent() {
+            Some(parent) => at = parent,
+            None => return false,
+        }
+    }
 }
 
 // ── Budget ───────────────────────────────────────────────────────────
