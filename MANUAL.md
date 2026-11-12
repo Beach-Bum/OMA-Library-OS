@@ -730,7 +730,7 @@ Every command, its syntax, and what it does underneath.
 | set | `set name "value"` | Set variable |
 | set ← | `set name ← expr` | Set from expression |
 | if | `if cond:` | Conditional (indented block) |
-| loop | `loop:` | Infinite loop (indented block, 10K iteration cap) |
+| loop | `loop:` | Loop until the reading's step allowance is spent (indented block) |
 | loop while | `loop while cond:` | Conditional loop (indented block) |
 | inscribe | `inscribe path` | Create file (indented = content) |
 | withdraw | `withdraw path` | Delete file |
@@ -768,6 +768,18 @@ Every command, its syntax, and what it does underneath.
 | `{documents-read}` | Session count |
 | `{read-count}` | This document's read count |
 | `{document}` | This document's name |
+
+### Limits
+
+A margin runs for whoever reads the document, so the engine holds it to three limits.
+
+| Limit | Rule |
+|-------|------|
+| Paths | Every path is taken relative to the library root. An absolute path, a path containing `..`, or a path that leaves the library through a symlink is refused: the instruction is skipped and the reader is told. |
+| Steps | One reading may execute 10,000 instructions in total, across all loops and nested blocks. A margin that runs past that is stopped and says so. |
+| Waiting | A single `wait` is at most 60 seconds (longer is shortened); one reading may wait 10 minutes in total. A negative, NaN or infinite value (`-1s`, `nans`, `infs`) is refused. |
+
+Blocks share the margin's variables: a `set` inside an `if` or a loop is visible after it, which is how a `loop while` ends. Nested blocks are indented one level deeper than the block that holds them.
 
 ---
 
